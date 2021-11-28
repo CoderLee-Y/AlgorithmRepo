@@ -118,6 +118,12 @@ $$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c
 \subsection{The K-means algorithm}
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
 It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.\cite{k-means}
+\begin{enumerate}
+  \item Arbitrarily choose and initial $k$ centers $\mathcal{C} = \{c_1, c_2 \dots c_k\}$
+  \item For each $i \in \{1, 2 \dots k\}$, set the cluster $C_i$ to be the set of points that are closer to $c_i$ than they are to $c_j$ for all $j \neq i$
+  \item For each $i \in \{1, 2 \dots k\}$, set $c_i$ to be the center of all points in $C_i$ 
+  \item Repeat Step 2 and Step 3 until $\mathcal{C}$ no longer changes.
+\end{enumerate}
 \begin{algorithm}
   \caption{K-means}
   \label{k-means}
@@ -142,12 +148,33 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \end{algorithmic}
 \end{algorithm}
 
+\begin{proof}
+Let $x_1, x_2 \dots x_n$ be n vectors in $\mathbb{R}^{d}$, then $f(x) = \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2 $ gets its minimum iff. $x = \frac{1}{n} \sum_{i=1}^{n}x_i$
+\begin{equation*}
+  \begin{split}
+    \frac{d f(x)}{d x} &=  \frac{d \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2}{d x} \\
+    & = -2\sum_{i=1}^{n} (x_i - x) \\
+    & = 0 \\
+    x & = \frac{1}{n} \sum_{i=1}^{n}x_i
+  \end{split}
+\end{equation*}
+
+\par $x = \frac{1}{n} \sum_{i=1}^{n}x_i$ is a stationary point of this function. Owing that it is a strictly convex function, the stationary point is alse the only minimun point of that function. 
+So the function gets its minimum at $x = \frac{1}{n} \sum_{i=1}^{n}x_i$.
+\end{proof}
+\begin{proof}
+  Updated value $f(x'')$ is strictly less than the original $f(x')$ where  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$.
+\par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
+That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
+\end{proof}
+
+
 \section{Key properties}
 K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course and try my best to get rid of copying original material.
 \subsection{Reduction from 3-SAT to K-means}
 Let {F} be the given planar 3-SAT instance with n variables and m clauses. We construct an instance I of planar k-means corresponding to F. Properties of layout I are listed below:
 \begin{enumerate}
-\item Each variable x_i corresponds to a simple circuit s_i in the plane and each circuit has an even number Q of vertices. Each vertex on such a circuit have M copies of a point. Note that M and Q will be stricted below.
+\item Each variable $x_i$ corresponds to a simple circuit $s_i$ in the plane and each circuit has an even number Q of vertices. Each vertex on such a circuit have M copies of a point. Note that M and Q will be stricted below.
 \item bdd
 \item cc
 \end{enumerate}
