@@ -142,13 +142,44 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \end{algorithmic}
 \end{algorithm}
 
+\subsection{Reduce cost of single iteration}
+In both K-means and K-means$++$ algorithm, if there are $n$ data points in $\mathbb{R}^ d$ space and $k$ clusters for partition, each iteration involves $n * k$ distance computations, which would significantly slow down algorithm. One contribution from Siddhesh Khandelwal\cite{Faster} helps reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. We'll show how this heuristic works in detail.
+\subsubsection{Inspiration}
+The optimization is based on the observation that across all iterations of K-means or K-means$++$, a data point changes its membership only among a small subset of clusters. The heuristic considers only a subset of \textbf{nearby cluster as candidates} for deciding membership for a data point. This heuristic has advantage of speeding up K-means and K-means$++$ clustering with marginal increase in loss functuion(MSE in our case). Note that the optimization can be applied in any algorithm to solve K-means problem with steps to caculate distance between points and centers, acting as augmentation.
+\subsubsection{Augmentation target}
+Let $A$ be any variant algorithm of K-means problem and $B$ be the same variant augmented with this geuristic. Let $T$ be the time required for $A$ to converge to MSE value of $E$. Let $T^{\prime}$ be the time required for $B$ to converge to MSE value of $E^{\prime}$. Our target is:
+\begin{itemize}
+\item \textbf{For convergence time:} $T^{\prime} < T$
+\item \textbf{For loss:} $E^{\prime} \le E \space $ or $ \space E^{\prime} \overset{marginally}{>} E$
+\end{itemize}
+
+\subsubsection{Augmentation detail}
+\par We assume that $k^{\prime}$ is significantly smaller than $k$. We will show how to choose $k^{\prime}$ later.We build candidate cluster list (CCL) based on top $k^{\prime}$ nearest clusters to the data point after first iteration of K-means. \par
+\begin{definition}
+\textbf{Cluster centroid} is the middle of a cluster. A centroid is a vector that contains one number for each variable, where each number is the mean of a variable for the observations in that cluster. The centroid can be thought of as the multi-dimensional average of the cluster.
+\end{definition}
+Consider a data point p1 and cluster centroids represented as $c_1$, $c_2$..., $c_k$. We assume that $k^{\prime}$ = 4, and $k^{\prime} << k $. After first iteration of K-means $c_5$, $c_6$, $c_8$, and $c_{11}$ are the top four closest centroids to $p_1$ in the increasing order of distance. This is the candidate cluster list for $p_1$. If we run K-means for second iteration, $p_1$ will compute distance to all k centroids. After second iteration, there are two possible cases:
+\begin{enumerate}
+\item The list do not change but only members'ranking changes.
+\item Several members of the centroids in the previous list are replaced with other centroids which were not in the list.
+\end{enumerate}
+It seems that the augmentation makes no sense. But what makes this method succeed is \textbf{real world data rarely makes case 2 happen}. That is, the set of top few closest centroids for a data point \textbf{remains almost unchanged even though order among them might change}.
+\subsubsection{Augmentation analysis}
+Overhead analysis:
+\begin{itemize}
+\item \textbf{Computation overhead:} $O(nklog(k))$ for creating CCL at first. We have to compute the distance to each cluster's centroid for each point and sort them to create CCL. 
+\item \textbf{Memory overhead:}$ O(nk^{\prime})$ to maintain CCL.
+\end{itemize}
+\par
+
+
 \section{Key properties}
 K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course and try my best to get rid of copying original material.
 \subsection{Reduction from 3-SAT to K-means}
 Let {F} be the given planar 3-SAT instance with n variables and m clauses. We construct an instance I of planar k-means corresponding to F. Properties of layout I are listed below:
 \begin{enumerate}
-\item Each variable x_i corresponds to a simple circuit s_i in the plane and each circuit has an even number Q of vertices. Each vertex on such a circuit have M copies of a point. Note that M and Q will be stricted below.
-\item bdd
+\item Each variable $x_i$ corresponds to a simple circuit $s_i$ in the plane and each circuit has an even number Q of vertices. Each vertex on such a circuit have M copies of a point. Note that M and Q will be stricted below. Now we can partiution
+\item b
 \item cc
 \end{enumerate}
 
