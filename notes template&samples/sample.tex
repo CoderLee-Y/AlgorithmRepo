@@ -118,6 +118,7 @@ $$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c
 
 
 \section{Algorithms}
+% origin K means
 \subsection{The K-means algorithm}
 \subsubsection{Algorithm Details}
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
@@ -188,6 +189,20 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \label{Fig.BadCluster} %用于文内引用的标签
 \end{figure}
 \par In the above images, the final formed clusters are pretty different. The good cluster's\cite{Fig.GoodCluster} initial $k$-centroids are initialized in different clusters, leading to a good result. While the other one's\cite{Fig.BadCluster} initial centroids were unfortunately initialized in the same cluster and got a result which was not as expected.
+
+% sum of optimiazation
+\subsection{Optimization of K-means}
+In last several decades, there has been significant work on improving Lloyd’s algorithm both in terms of reducing MSE and running time. The follow up
+work on Lloyd’s algorithm can be broadly divided into three categories:
+\begin{enumerate}
+\item Better seed selection
+\item Selecting ideal value for number of clusters
+\item Bounds on data point to cluster centroid distance
+\end{enumerate}
+Next, we will introduce some typical work in these categories. Section 3.3 introduces K means++ for seed selection, section 3.4 and 3.5 helps bound on data point to cluster centroid distance and section 3.6 introduces several typical methods to select ideal value for number of clusters briefly. Let's begin.
+
+
+% kmeans ++
 \subsection{The K-means++ algorithm}
 The K-means++ algorithm was proposed by David Arthur and Sergei Vassilvitskii in 2006, which outperforms K-means in terms of both accuracy and speed \cite{kmeanspp}.
 \par The K-means++ algorithm uses totally a different way to initialize the $k$ centroids. Rather than uniformly randomly pick point in the range of all points, it uses special to make the $k$ centroids as far away from each other as possible.
@@ -249,7 +264,7 @@ There are 3 properties the accelerated K-means algorithm should satisfy:
 \item \textbf{Correct results, } it always produces exactly the same final centers as the standard  algorithm.
 \item \textbf{Support any black-box distance metric,} so it should not rely for example on optimizations specific to Euclidean distance.
 \end{itemize} \par
-Obviously, It's more strict than previous method. This stronger properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers can be used together with the new algorithm.
+Obviously, It's more strict than previous method. This stronger properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers can be used together with the new algorithm.(e.g. ISODATA, which not memtioned in our note)
 
 \subsubsection{Preliminary results}
 The algorithm firstly find the only black box property of any distance metrics.That is: for any 3 points $x, y, z$, satisfy  triangle inequality:
