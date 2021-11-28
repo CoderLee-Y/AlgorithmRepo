@@ -114,6 +114,7 @@ $$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c
   \end{split}
 \end{equation*}
 
+
 \section{Algorithms}
 \subsection{The K-means algorithm}
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
@@ -172,6 +173,7 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   The initial $k$ centroid are picked in the range of data set randomly. However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initail picked centroids.
   \par Here are a few figures showing the potential:
 
+% opt 2
 \subsection{Reduce cost of single iteration}
 In both K-means and K-means$++$ algorithm, if there are $n$ data points in $\mathbb{R}^ d$ space and $k$ clusters for partition, each iteration involves $n * k$ distance computations, which would significantly slow down algorithm. One contribution from Siddhesh Khandelwal\cite{Faster} helps reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. We'll show how this heuristic works in detail.
 \subsubsection{Inspiration}
@@ -202,8 +204,99 @@ Overhead analysis:
 \end{itemize}
 \par
 
+% opt 3
+\subsection{Avoid redundant computation}
+In fact, the previous augmentation \cite{Faster} makes trade-off between loss function and running time. Still based on the observation of  unnecessary calculation in the process of iteration, Charles Elkan put forward a more strict method to avoid unnecessary computation.\cite{articleToBound} The key idea is to bound on data point to cluster centroid distance and use triangle inequality to avoid redundant computations of distance between data points and cluster centroids.
+\subsubsection{Inspiration}
+The accelerated algorithm applyies the triangle inequality in two different ways, and keeps track of lower and upper bounds for distances between points and cluster centroids. Its inspiration is based on the fact that most distance calculations in standard K-means are redundant. If a point is \textbf{far away from a centroid}, it is not necessary to calculate the exact distance between the point and the centroid in order to know that the point should not be assigned to this centroid. Conversely, \textbf{if a point is much closer to one center than to any other}, calculating exact distances is not necessary to know that the point should be assigned to the first center. 
+\subsubsection{Augmentation target}
+There are 3 properties the accelerated K-means algorithm should satisfy:
+\begin{itemize}
+\item \textbf{Start with any initial centers}, so that all existing initialization methods incuding original K-means and K-means++ can continue to be used.
+\item \textbf{Correct results, } it always produces exactly the same final centers as the standard  algorithm.
+\item \textbf{Support any black-box distance metric,} so it should not rely for example on optimizations specific to Euclidean distance.
+\end{itemize} \par
+Obviously, It's more strict than previous method. This stronger properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers can be used together with the new algorithm.
+
+\subsubsection{Preliminary results}
+The algorithm firstly find the only black box property of any distance metrics.That is: for any 3 points $x, y, z$, satisfy  triangle inequality:
+$$d(x,z) \le d(x, y) + d(y, z)$$ in which $d()$ means distance function. Let x be a point and let b and c be centers, we need to know that $d(x, c) \ge d(x, b)$ in order to avoid calculating $d(x, c)$. Now I'd like to introduce 2 Lemma.
+\begin{lemma}
+Let x be a point and let b and c be centers. If $d(b, c) \ge 2d(x,b)$ then $d(x,c) \ge d(x,b)$.
+\end{lemma}
+\begin{proof}
+Use  triangle inequality, $d(b,c) - d(x,b)\le d(x,c)$. Use "if" in lemma, we can get the conclusion.
+\end{proof}
+\begin{lemma}
+Let x be a point and let b and c be centers.$d(x,c) \ge max(0, d(x,b)-d(b,c))$.
+\end{lemma}
+\begin{proof}
+Use triangle inequality, with $d(x,c) \ge 0$, easily get lemma 5.
+\end{proof}
+
+Let x be any data point, let c be the center to which is currently assigned, let s become any other center. So with the lemma, we can assert that:
+\begin{claim}
+if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we don't need to compute $d(x,s)$. (Proved by lemma)
+\end{claim}
+\begin{claim}
+Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .(Proved by claim)
+\end{claim}
+\begin{claim}
+Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided. (Proved by claim)
+\end{claim}
+
+Next, Let x be any data point, let c be any center, let s become previous version of smae center. Suppose that in the previous iteration we knew a lower bound g such that $d(x, s) \ge g$. Then we can infer a lower bound h for current iteration:
+$$
+d(x, c) \ge max\{0, d(x,s)-d(s,c)\} \ge max\{0, g-d(s,c)\} = h
+$$
+This can be easily proved by lemma 2. So we can assert that:
+\begin{claim}
+If center moved a small distance$(d(s,c) is small)$, the lower bound only make a small move.
+\end{claim}
+
+\subsubsection{Augmentation detail}
+In practical application, as the centers are converging to their final positions, the vast majority of the data points have the same closest center from one stage to the next. A good algorithm would exploit this coherence to improve running time. We use $u(x)$ to represent upper bound of distance between a given point $x$ and its currently assigned center $c$. $l(x,c^{\prime})$ is the lower bound on the distance between x and some other center $c^{\prime}$. If $u(x) \le l(x,c^{\prime}) $, we don't need to calculate $d(x,c), d(x, c^{\prime})$. \par
+Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x to its closest initial center, using Lemma 1 to firstly reduce redundant distance computations. Each time $d(x,c)$ is computed, set $l(x,c)=d(x,c)$. At last, set upper bounds $u(x) = min_c(d(x,c))$. Then repeate this until convergence.(Each time $d(x,c)$ is calculated, we update $l(x,c)$. Similarly $u(x)$ when computing $d(x,c(x))$.)
+
+\begin{enumerate}
+\item For all centers c and $c^{\prime}$, compute $d(c, c^{\prime})$. Set $s(c) = \frac{1}{2}min_{c \ne c^{\prime}}d(c,c^{\prime})$.
+\item Identify all points x such that $u(x) \le s(c(x))$. (Refer to claim 8)
+\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$(obviously) and iii) $u(x) > \frac{1}{2}d(c(x), c)(Claim 7)$: 
+\begin{enumerate}
+\item If $r(x) = true$, compute $d(x,c(x))$ and assign $r(x)=false$. Otherwise, $d(x,c(x)) = u(x).$ (We don't have to update according to Claim 9)
+\item  If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$, then compute $d(x,c)$ and decide if swap c for x. (Claim 7)
+\end{enumerate}
+\item For each center c, compute centroid, store in m(c).
+\item For each  pair of x and c, set $l(x,c) = max(l(x,c) - d(c,m(c)), 0)$
+\item For each point x, set $u(x) = u(x) + d(m(c(x)), c(x))$
+\item For each point x, set $r(x) = True$
+\item Really replace c by m(c)
+\end{enumerate}
+
+Logically, step (2) is redundant because its effect is achieved by condition 3(iii). Computationally, step (2) is benefificial in real experiment because reduce x's size for later steps. And note that u(x) and c(x) may change during the execution of step (3), so we can't discard condition 3(iii).\par
+The most significant part is step (3), we use many strictions to avoid redundant computations. In 3(a) step, we only compute $d(x,c(x))$ for at most one time. Just when in pervious step (7) r(x) is set to True, we update  $d(x,c(x))$, or else we use u(x) to replace. Why step 3's strictions are effcient is that at the start of each iteration, the upper bounds and lower bounds for x are tight enough. If at $j^{th}$ iteration is tight, it'll be tight at $(j+1)^{th}$ iteration, because the location of most centers changes only slightly, and hence the bounds change only slightly. \par
+
+\subsubsection{Augmentation analysis}
+Compared to original algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms for $ 11.3 \times -  351 \times$.
+
+% Opt 4
+\subsection{Choose a proper K}
+How to evaluate goodness of clustering for various potential values of number of clusters? We will introduce several common methods.\cite{datamining,inproceedings,articleToBound,doi:10.1243/095440605X8298} Let's review our optimization. We speed up the algorithm with either lenient or strict conditions and seed the initial K center properly. But still exists the only hyper-parameter we don't know how to tune. So let's begin. \par
+
+
+\subsubsection{Use a range of set}
+We choose a set of K and compare their performance. In this set, we need to choose k significantly smaller than the number of objects in the data sets and let it be resonably large.
+\subsubsection{statistical measures}
+There are several statistical measures available for selecting K. These measures are often applied in combination with probabilistic clustering approaches.
+They are calculated with certain assumptions about the underlying distribution of the data. The Bayesian information criterion is calculated on data sets which are constructed by a set of \textbf{Gaussian distributions}. Monte Carlo techniques, which are associated with the null hypothesis, are used for assessing the clustering results and also for determining the number of clusters.
+
+\subsubsection{visualization}
+Visual verification is applied widely because of its simplicity and explanation possibilities. In my own practice, I would use PCA to check how many clusters are there in Machine Learning course's project. But it has many restrictions, which I'll omit here due to space constraints.
+
+\par
+
 \section{Key properties}
-K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course and try my best to get rid of copying original material.
+K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course. But I'll only describe informally.
 \subsection{Reduction from 3-SAT to K-means}
 Let {F} be the given planar 3-SAT instance with n variables and m clauses. We construct an instance I of planar k-means corresponding to F. Properties of layout I are listed below:
 \begin{enumerate}
@@ -211,6 +304,7 @@ Let {F} be the given planar 3-SAT instance with n variables and m clauses. We co
 \item b
 \item cc
 \end{enumerate}
+
 
 \section{Application}
 In this section, we present a k-means clustering-based COVID-19 analysis to determine the clusters according to the health care quality of the countries. In fact we don't think this research meaningful, but just refer to their way to use K-Means in application.
