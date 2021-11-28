@@ -1,0 +1,465 @@
+% !TEX bibfile = ref.bib
+\documentclass[11pt]{article}
+\usepackage{latexsym}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{epsfig}
+\usepackage[right=0.8in, top=1in, bottom=1.2in, left=0.8in]{geometry}
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}  % Use Input in the format of Algorithm
+\renewcommand{\algorithmicensure}{\textbf{Output:}} % Use Output in the format of Algorithm
+\usepackage{listings}
+\usepackage{ctex}
+
+% 用来设置附录中代码的样式
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+
+\spacing{1.06}
+
+\newcommand{\handout}[5]{
+  \noindent
+  \begin{center}
+  \framebox{
+    \vbox{\vspace{0.25cm}
+      \hbox to 5.78in { {SE3352:\hspace{0.12cm}Algorithm Design} \hfill #2 }
+      \vspace{0.48cm}
+      \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+      \vspace{0.42cm}
+      \hbox to 5.78in { {#3 \hfill #4} }\vspace{0.25cm}
+    }
+  }
+  \end{center}
+  \vspace*{4mm}
+}
+\newcommand{\lecture}[4]{\handout{#1}{#2}{#3}{Scribes:\hspace{0.08cm}#4}{Notes #1}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{assumption}[theorem]{Assumption}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\var}{\text{var}}
+\def\eps{\ensuremath\epsilon}
+\begin{document}
+
+\lecture{1 -- Clustering}{Nov 27, 2021}{Instructor:\hspace{0.08cm}\emph{Guoqiang Li}}{\emph{Haotian Wang, Yiyan Li}}
+
+
+\section{Introduction}
+Clustering can be considered the most important unsupervised learning problem; As every other problem of this kind, it deals with finding a structure in a collection of unlabeled data.
+\begin{definition}
+A cluster is a collection of objects which are “similar” between them and are “dissimilar” to the objects belonging to other clusters. Clustering is the algorithm that recognizes clusters from a given data set.
+\end{definition}
+Note that this is a very rough definition. Part of common application domains in which the clustering problem arises are as follows:
+\begin{itemize}
+\item \textbf{Multimedia Data Analysis:} Learning image or video representations without manual annotations. e.g. When using Streaming media platform, face clustering can recognize all the actors in any frame. \cite{wang2019linkage,xing2021learning}
+\item \textbf{Responding to public health crises:} With the increasing number of samples, the manual clustering of COVID-19 data samples becomes time-consuming. Clustering helps classify medical datasets deterministically.\cite{COVID-19}
+\item \textbf{Social Network Analysis:} Clustering provides an important understanding of the community structure in the network. Results can be used for customer segmentation and sending ads. Put it in a formal way, \textbf{clustering groups the nodes of the graph into clusters}, taking into account the edge structure of the graph in such a way that there are several edges within each cluster and very few between clusters. \cite{community}
+\item \textbf{Intermediate Step for other fundamental data mining problems:} Clustering can be considered as a form of data summarization. Many clustering methods are closely related to dimensionality reduction methods. Such methods can be considered a form of data summarization.
+\item \textbf{Intelligent Transportation:} Under \textbf{the online scenario}, data is in the form of streams, i.e., the whole dataset could not be accessed at the same time. In future intelligent transportation, low-latency online vehicle tracking is essential and can be solved by online clustering.\cite{luna2021online}
+
+\end{itemize}
+
+\par Today we'll start from the naive K-means clustering and improve the algorithm step by step. The lecture has X main topics that we'll go through, i.e. TODO AL LAST!!
+
+\section{Problem Description}
+\par The k-means clustering problem is one of the oldest and most important questions in all of computational geometry. Given an integer $k$ and a set of $n$ data points in $\mathbb{R}^{d}$, the goal of this problem is to choose $k$ centers so as to minimize the total squared distance between each point and its closest center.\cite{kmeanspp}
+\par There are several kinds of k-means algorithms among which the most common algorithm , also called naive k-means algorithm, was first proposed by Stuart Lloyd\cite{Least-squares-quantization-in-PCM} of Bell Labs in 1957.
+\par For a k-means problem, we are given an integer $k$ and a set of data vector ($x_1, x_2, x_3 \dots x_n$) in $d$-dimension. And we need to choose $k$ centroids to partition the $n$ vectors into $k$ types $T$ ($T_1, T_2 \dots T_k$) with the minimum within-cluster sum of squares ($WCSS$)
+$$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c _i \right\rVert }^2  $$
+\par where $\mu_i$ is the mean of vector in set $S_i$.
+
+\begin{lemma}
+  Let $S$ be a set of points with its mean to be $\mu$, and let $c$ to be and arbitrary point.Then $\sum_{x \in S}{\left\lVert x - c\right\rVert}^2 = \sum_{x \in S}{\left\lVert x - \mu\right\rVert}^2 + \left\lvert S \right\rvert \cdot {\left\lVert z - \mu\right\rVert}^2 $
+\end{lemma}
+\par So we minimize the function only when $c_i=\mu_i$
+\begin{equation*}
+  \begin{split}
+    \mathcal{WCSS} & = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c _i \right\rVert }^2 \\
+    & = \arg \min \sum_{i=1}^{k} (\sum_{x \in S_i} {\left\lVert x - \mu_i\right\rVert}^2 + \left\lvert S_i \right\rvert \cdot {\left\lVert c_i - \mu_i\right\rVert}^2) \\
+    & = \arg \min \sum_{i=1}^{k} {\left\lvert S_i \right\rvert }\cdot Var S_i \\
+    & = \arg \min \sum_{i=1}^{k} \frac{1}{2\cdot\left\lvert S_i\right\rvert } \sum_{x,y \in S_i} {\left\lVert x_i - y_i\right\rVert }^2
+  \end{split}
+\end{equation*}
+
+\section{Algorithms}
+\subsection{The K-means algorithm}
+The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
+It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.\cite{k-means}
+\begin{algorithm}
+  \caption{K-means}
+  \label{k-means}
+  \begin{algorithmic}
+    \REQUIRE {k: number of output cluster; Data: input data}
+    \ENSURE {$\mathcal{S}$ : set of all clusters $S_i$}
+    \STATE Arbitrarily initialize k centroids $C=\{c_1, c_2 \dots c_k\}$ 
+    \REPEAT
+      \FOR {each point $x$ in Data $S$}
+      \FOR {$i = 0 \rightarrow k$}
+      \FOR {$j = 0 \rightarrow k$}
+      \STATE {set x to be a member of cluster $S_i$ where ${\left\lVert x-c_i\right\rVert }^2 < {\left\lVert x-c_j\right\rVert }^2$}
+      \ENDFOR
+      \ENDFOR
+      \ENDFOR
+      \FOR {$i = 0 \rightarrow k$}
+      \STATE {$c_i \leftarrow \frac{1}{\left\lvert S_i\right\rvert } \sum_{x \in S_i} x$}
+      \STATE {set $c_i$ to be the centroid of all points in  cluster $S_i$}
+      \ENDFOR
+    \UNTIL{$S$ stays unchanaged}
+    \ENSURE {$\mathcal{S}$ : set of all clusters $S_i$}
+  \end{algorithmic}
+\end{algorithm}
+
+\section{Median Trick}
+So far, we have an algorithm $A$ which estimates in correct range of $\eps$ with probability $\ge 0.9$. Our new algorithm $A^{\ast}$ will output in range of $\eps$ with probability $1-\delta$.
+Algorithm:
+\begin{itemize}
+\item Repeat $A$ for $m=O(log (1/\delta))$ times
+\item Take median of all the $m$ answers.
+\end{itemize}
+
+To prove the correctness, we'll use Chernoff/Hoeffding bounds.
+
+\begin{definition}
+[Chernoff/Hoeffding Bound]
+Let $X_{1}$, $X_{2}$, $\ldots$, $X_{m}$ be independent random variables $\in \{0,1\}$,
+$\mu = E[\Sigma_{i} X_{i}], \eps \in [0,1]$.
+Then $Pr[|\Sigma_{i} X_{i}-\mu| > \eps\mu] \leq 2e^{-\eps^{2}\mu/3}$
+\end{definition}
+
+Define $X_{i} = 1$ iff the $i^{th}$ answer of $A$ is correct (i.e. estimated value of $A$ lies in correct range).
+
+\begin{claim}
+$E[X_{i}] = 0.9$, and $E[\mu] = 0.9m$
+\end{claim}
+
+\begin{proof}
+Since A is correct with probability 0.9, $E[X_{i}] = 0.9$. And $E[\mu] = 0.9m$ due to linearity of expectation.
+\end{proof}
+
+\begin{claim}
+New algorithm $A^{\ast}$ is correct when $\Sigma_{i} X_{i} > 0.5m$
+\end{claim}
+
+\begin{proof}
+Since we are considering median value to be our answer, if more than half the trials of A are correct, algorithm $A^{\ast}$ is also correct.
+\end{proof}
+
+\begin{claim}
+To prove, $Pr[\Sigma_{i} X_{i} \ge 0.5m] \ge 1-\delta$ or $Pr[\Sigma_{i} X_{i} < 0.5m] < \delta$
+\end{claim}
+
+\begin{proof}
+\begin{equation}
+\begin{split}
+Pr[\Sigma_{i} X_{i} < 0.5m] & = Pr[\Sigma_{i} X_{i} - 0.9m < -0.4m]\\
+& \le Pr[|\Sigma_{i} X_{i} - \mu| > 0.4m]\\
+& = Pr[|\Sigma X_{i} - \mu| > 0.4/0.9 \mu]
+\end{split}
+\end{equation}
+Using Chernoff bound,
+\begin{equation}
+\begin{split}
+& \leq e^{-c*0.9m}\\
+& < \delta
+\end{split}
+\end{equation}
+Above equation holds for $m = O(log(1/\delta))$
+\end{proof}
+
+\section{Distinct Elements}
+Given, a stream of size $m$ containing numbers from $[n]$, we have to approximate the number of elements with non-zero frequency. To calculate the exact value the space required:
+
+\begin{itemize}
+\item $O(n)$ bits. (maintain a vector of length n).
+\item $O(m \log (n))$ bits. (save m numbers, each taking $log(n)$ bits).
+\end{itemize}
+
+Since, this complexity is not feasible as $m$,$n$ can be very large, we'll look at algorithm for approximating the distinct count value.
+
+\subsubsection{Hash Function}
+\begin{itemize}
+\item $h : [n] \rightarrow [0,1]$
+\item $h(i)$ is uniformly distributed in $[0,1]$.
+\end{itemize}
+
+\subsection{Algorithm [Flajolet-Martin 1985]}
+We maintain a variable $z$.
+\begin{enumerate}
+\item Initialize $z = 1$.
+\item Whenever $i$ is encountered: $z = \min{(z,h(i))}$
+\item When done, output $1/z -1$.
+\end{enumerate}
+
+Now, we'll prove the algorithm works in a similar fashion followed in previous lecture.
+Let $d$ be number of distinct elements.
+
+\begin{claim}
+$E[z] = d+1$
+\end{claim}
+
+\begin{proof}
+$z$ is the minimum of $d$ random numbers in $[0,1]$. Pick another random number $a \in [0,1]$. The probability $a<z$:
+\begin{enumerate}
+\item exactly z
+\item probability it's smallest among $d+1$ reals : $1/(d+1)$
+\end{enumerate}
+Equating these two, one can prove the claim.
+\end{proof}
+
+\begin{claim}
+$\text{var}[z] \leq 2/d^{2}$
+\end{claim}
+
+\begin{proof}
+It can be done in a similar fashion described in previous lecture.
+\end{proof}
+
+\subsubsection{$(1+\eps)$ approximation Algorithm }
+We can take $Z = (z_{1} + z_{2} + ... z_{k})/k$ for independent $z_{1}, ... z_{k}$
+
+\subsection{Alternate Algorithm: Bottom-k}
+Instead of just use the minimum value of hash function for $i$ inputs, we'll maintain the $k$ smallest hashes seen.
+\begin{enumerate}
+\item Initialize $(z_{1}, z_{2},...z_{k}) = 1$.
+\item Keep $k$ smallest hashes seen, s.t. $z_{1}\leq z_{2}\leq...z_{k}$
+\item When done, output $\hat{d} = k/z_{k}$
+\end{enumerate}
+
+\begin{claim}
+The following claims are stated:
+\begin{itemize}
+\item $Pr[\hat{d} > (1 + \eps)d] \leq 0.05$
+\item $Pr[\hat{d} < (1 - \eps)d] \leq 0.05$
+\item Overall probability that $\hat{d}$ outside range is at most 0.1
+\end{itemize}
+\end{claim}
+
+\begin{proof}
+To compute $Pr[\hat{d} > (1+\eps)d]$:
+\begin{itemize}
+\item Define $X_{i} = 1$ iff $h(i) < \dfrac{k}{(1+\eps)d}$
+\item Then $\hat{d} > (1+\eps)d$ iff $\Sigma_{i} X_{i} > k$
+\item if $\Sigma_{i} X_{i} > k$\\
+  $\iff \exists$ at least $k$ numbers for which $h(i) < \dfrac{k}{(1+\eps)d}$\\
+    \begin{equation}
+      \iff z_{k} < \dfrac{k}{(1+\eps)d}
+      \iff \dfrac{k}{z_{k}} > (1+\eps)d
+      \iff \hat{d} > (1+\eps)d
+    \end{equation}
+\item
+  $E[X_{i}] = \dfrac{k}{(1+\eps)d}$\\
+  $E[\Sigma_{i} X_{i}] = d E[X_{i}] = \dfrac{k}{1 + \eps}$\\
+  $\text{var}[\Sigma_{i} X_{i}] = d \text{var}[X_{i}] \leq dE[X_{1}^{2}] \leq  \dfrac{k}{1+\eps} \leq k$\\
+  (Since $X_{1} \in \{0,1\}$, $E[X_{1}^{2}] = E[X_{i}]$)
+\item By Chebyshev:
+    $Pr[|\Sigma X_{i} - \dfrac{k}{1+\eps}| > \sqrt{20k}] \leq 0.05 \implies Pr[\Sigma X_{i} > \dfrac{k}{1+\eps} + \sqrt{20k}] \leq 0.05 $\\
+    \begin{itemize}
+    \item
+      (For $\eps < 1/2$ and $k=c/\eps^{2}$)\\
+      $\dfrac{k}{1+\eps} + \sqrt{20k} \leq k(1-\eps+\eps^{2}) + \sqrt{20k}$ (Taylor Series Expansion)\\
+      $ \leq k - k\eps/2 + 5\sqrt{c}/\eps$
+      $ = k - c / 2\eps + 5\sqrt{c}/\eps$\\
+      $ < k $ where $c > 100$
+    \item
+      Since $k > \dfrac{k}{1+\eps} + \sqrt{20k} $ in our case and $\Sigma X_{i}$ is monotonically increasing, $Pr[\Sigma X_{i} > k] \leq Pr[\Sigma X_{i} > \dfrac{k}{1+\eps} + \sqrt{20k}] \leq 0.05$
+
+    \end{itemize}
+\end{itemize}
+\end{proof}
+
+\subsection{Hash functions in stream}
+The hash function we used has two practical issues: (1) the return value should be a real number. (2) how do we store it?
+
+Discretization can solve the first issue. Instead of all the real numbers in $[0, 1]$, we use hash function with range $\{0, \frac{1}{M}, \frac{2}{M}, \frac{3}{M}, \ldots, 1\}$. For large $M \gg n^{3}$, the probability that $d \le n$ random numbers collide is at most $\frac{1}{n}$.
+
+For the second issue, we use pairwise independent function instead of independent function.
+
+\begin{definition}
+$h: [n] \rightarrow \{1, 2, \ldots M\}$ is pairwise independent if for all $i \ne j$ and $a, b \in [M]$, $\text{Pr}[h(i)=a \land h(j)=b]=\frac{1}{M^2}$
+\end{definition}
+
+It works because in previous calculation, we only care about pairs. We defined $X_i=1$ iff $h(i)$ is small than a threshold, then we computed $\text{var}[\Sigma X_i] = E[(\Sigma X_i)^2] - E[(\Sigma X_i)^2] = E[X_1X_1 + X_1X_2 + \ldots]- E[(\Sigma X_i)^2]$. Notice that $E[X_iX_j]$ is the same for fully random $h$ and pairwise independent $h$.
+
+\begin{example}
+[Construct a pairwise independent hash]
+Assume $M$ is a prime number (if not, we can always pick a larger $M$ that is a prime number). We pick $p, q \in \{0, 1, 2, \ldots M-1 \}$ and the hash function $h(i) = pi+q \mod M$. In this construction we only need $O(\log M) = O(\log n)$ space (to store $p, q, M$).
+\end{example}
+
+\begin{proof}
+$h(i)=a, h(j)=b$ is equivalent to $pi+q \equiv a, pj+q \equiv b$. So $p(i-j) \equiv a-b$ and $p \equiv (a-b)(i-j)^{-1}, q \equiv a - pi$. Since $M$ is a prime number, the unique inverse implies that there is only one pair $(p, q)$ satisfies it. And the probability that pair is chosen is exactly $\frac{1}{M^2}$.
+\end{proof}
+
+\section{Impossibility Results}
+
+We have used both approximation and randomization to solve the distinct counting problem with space much less than $\min{(m, n)}$. Now we are wondering: can we omit either approximation or randomization to achieve the same space efficiency? The answer is no.
+
+\subsection{Deterministic Exact Won't Work}
+
+First, we will show that there is no deterministic (no randomization) and exact (no approximation) way to solve it.
+
+Suppose there do exists a deterministic and exact algorithm $A$ and an estimator function $R$ that use space $s \ll n, m$. That is, for a given integer stream, we first run the algorithm $A$ on the stream. As the stream goes $A$ will return middle memory steps, and we obtain the final memory state $\sigma$ after the stream ends. Then we apply $R$ on $\sigma$ to obtain our estimator $\hat{d}$. Since both $A$ and $R$ are deterministic and exact, $\hat{d}$ must equals to the distinct count for the stream.
+
+We now build a binary representation $x$ of the stream with the following rules: (1) $x \in \{0, 1\}^{n}$, (2) $i$ in stream iff $x_i = 1$. For example, if 1, 3, 5, 6, 7 are in the stream and 2, 4 are not, $x$ will start with 1, 0, 1, 0, 1, 1, 1. Notice that each stream has a corresponding representation and streams containing different numbers have different representations.
+
+\begin{claim}
+We can recover the $x$ of the stream given the memory state $\sigma$
+\end{claim}
+
+\begin{proof}
+Denote $d=R(\sigma)$ be the original estimator. Now we treat $\sigma$ as a middle snapshot of the memory and add integer $i$ as the next element of the stream. Now $A$ will return another memory state $\sigma'$, and $d'=R(\sigma)'$ will be our new estimator. If $d'=d$, $i$ must have appeared in the stream before since $A$ and $R$ are deterministic and exact. Similarly, if $d'>d$, $i$ must have not appeared in the stream before. Using this method with $i=1, 2, 3\ldots$ and we can recover the $x$.
+\end{proof}
+
+Since we can recover $x$ from $\sigma$, we can treat $\sigma$ as an encoding of a string $x$ of length $n$. But $\sigma$ has only $s \ll n$ bits! Furthermore, we can treat $A$, the function that produces $\sigma$, as a function with domain $\{0, 1\}^{n}$ and $\{0, 1\}^{s}$. We can see that $A$ must be injective because if $A(x)=A(x')=\sigma$, the recoverability implies $x=x'$.
+
+Hence $s \ge n$. Which implies that there is no deterministic and exact algorithm $A$ and an estimator function $R$ that use space $s \ll n, m$.
+
+\subsection{Deterministic Approx. Won't Either}
+
+We can use the similar strategy to prove that deterministic approx. won't work. We pick $T \subset \{0, 1\}^{n}$ that satisfies the following conditions: (1) for all distinct $x, y \in T$, the number of digits $i$ that $y_i=1$ and $x_i=0$ should $\ge \frac{n}{6}$. (2) $|T| \ge 2^{\Omega(n)}$. Now we use algorithm $A$ to encode an input $x$ into $\sigma=A(x)$ and our estimator would be $\hat{d}=R(\sigma)$.
+
+Now we want to recover $x$ based on $\sigma$, as what we have done in the last section. For a given $\sigma$ and any $y \in T$, we append $y$ to the stream and apply $A$ on it, and $A$ will return a memory state $\sigma'$. Using $\sigma'$ we have new estimator $\hat{d'}=R(\sigma')$.
+
+\begin{claim}
+If $\hat{d'} > 1.01 \hat{d}$, then $x \ne y$, else $x=y$.
+\end{claim}
+
+\begin{proof}
+The idea is that when $x=y$, $\hat{d}$ would be really close to $\hat{d'}$ (up to $(1+\epsilon)^{2}$ because both of them are $\epsilon$-approximated) and when $x \ne y$, the construction of $T$ guarantee that $\hat{d} \ge \hat{d} + \frac{n}{6}$. So we can pick an $\epsilon$ that works for our claim.
+\end{proof}
+
+We can use this method to check every element $y \in T$ to see if $y=x$, and eventually we can recover $x$ from it. Similar to last section, we can show that $A$ is an injective function and it implies that $2^{s} \ge |T|$ or $s = \Omega(n)$.
+
+\section{Concluding Remarks}
+
+\begin{itemize}
+
+\item We can use median trick and Chernoff bound to improve the probability of an existing algorithm.
+
+\item For distinct elements problem, we can also store the hashes $h(i)$ approximately. One example is to store the number of leading zeros, and it only cost $O(\log \log n)$ bits per hash value, and that is the idea behind another algorithm called HyperLogLog.
+
+\item For the impossibility results, we can also prove that randomized exact algorithm won't work.
+\end{itemize}
+
+\bibliographystyle{IEEEtran}
+\bibliography{ref.bib}
+
+\section*{Appendix}
+\appendix
+\section{K-means Algorithm Code in Python}
+\begin{lstlisting}[language=Python]
+import math
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+
+def loadData():
+    df = pd.read_csv("./data/data.csv")
+    return df.values
+
+
+def euclideanDistance(vector1, vector2):
+    return math.sqrt(sum(np.power(vector1 - vector2, 2)))
+
+
+def initRandomCentroids(data, k):
+    count, dim = data.shape
+    centroids = np.zeros((k, dim))
+    colMax = np.max(data, axis=0)
+    colMin = np.min(data, axis=0)
+    colRange = colMax - colMin
+    for i in range(k):
+        centroid = colMin + np.random.rand(dim) * colRange
+        centroids[i, :] = centroid
+    print(centroids)
+    return centroids
+
+
+def kmeans(k):
+    data = loadData()
+    count = data.shape[0]
+    centroids = initRandomCentroids(data, k)
+    clusterBound = np.zeros((count, 2))
+    index = np.zeros((count, 1))
+    processing = True
+    while processing:
+        processing = False
+        for i in range(count):
+            minIndex = 0
+            minDist = float("inf")
+            for j in range(k):
+                distance = euclideanDistance(centroids[j, :], data[i, :])
+                if distance < minDist:
+                    minDist = distance
+                    minIndex = j
+
+            if clusterBound[i, 0] != minIndex:
+                processing = True
+                clusterBound[i, :] = minIndex, minDist ** 2
+        index[:, 0] = clusterBound[:, 0]
+        for j in range(k):
+            newCentroid = data[np.all(index == j, axis=1), :]
+            centroids[j, :] = np.mean(newCentroid, axis=0)
+    print("k means finished!")
+    visualization(centroids, clusterBound, data)
+
+
+def visualization(centroids, clusterBound, data):
+    plotMarkList = ['oy', 'og', 'or', 'oc', '^m', '+y', 'sk', 'dw', '<b', 'pg']
+    centroidMarkList = ['Dr', 'Dc', 'Dm', 'Dy', '^k', '+w', 'sb', 'dg', '<r', 'pc']
+    k = centroids.shape[0]
+    count = data.shape[0]
+    if data.shape[1] != 2:
+        print("too many dimensions to draw :(")
+        return
+    if k > len(plotMarkList):
+        print("too many centroids to draw :(")
+        return
+    for i in range(count):
+        mark = plotMarkList[int(clusterBound[i, 0])]
+        plt.plot(data[i, 0], data[i, 1], mark)
+    for i in range(k):
+        mark = centroidMarkList[i]
+        plt.plot(centroids[i, 0], centroids[i, 1], mark)
+    plt.show()
+
+
+if __name__ == "__main__":
+    kmeans(3)
+\end{lstlisting}
+
+
+\end{document}
