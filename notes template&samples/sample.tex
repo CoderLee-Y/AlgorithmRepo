@@ -142,6 +142,17 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \end{algorithmic}
 \end{algorithm}
 
+\section{Key properties}
+K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course and try my best to get rid of copying original material.
+\subsection{Reduction from 3-SAT to K-means}
+Let {F} be the given planar 3-SAT instance with n variables and m clauses. We construct an instance I of planar k-means corresponding to F. Properties of layout I are listed below:
+\begin{enumerate}
+\item Each variable x_i corresponds to a simple circuit s_i in the plane and each circuit has an even number Q of vertices. Each vertex on such a circuit have M copies of a point. Note that M and Q will be stricted below.
+\item bdd
+\item cc
+\end{enumerate}
+
+
 \section{Median Trick}
 So far, we have an algorithm $A$ which estimates in correct range of $\eps$ with probability $\ge 0.9$. Our new algorithm $A^{\ast}$ will output in range of $\eps$ with probability $1-\delta$.
 Algorithm:

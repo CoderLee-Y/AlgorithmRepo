@@ -62,4 +62,13 @@ D.~Arthur and S.~Vassilvitskii, ``k-means++: the advantages of careful
 S.~Lloyd, ``Least squares quantization in pcm,'' \emph{IEEE Transactions on
   Information Theory}, vol.~28, no.~2, pp. 129--137, 1982.
 
+\bibitem{npc-prove}
+M.~Mahajan, P.~Nimbhorkar, and K.~Varadarajan, ``The planar k-means problem is
+  np-hard,'' in \emph{WALCOM: Algorithms and Computation}, S.~Das and
+  R.~Uehara, Eds.\hskip 1em plus 0.5em minus 0.4em\relax Berlin, Heidelberg:
+  Springer Berlin Heidelberg, 2009, pp. 274--285.
+
+\bibitem{Vattani_thehardness}
+A.~Vattani, ``The hardness of k-means clustering in the plane.''
+
 \end{thebibliography}
