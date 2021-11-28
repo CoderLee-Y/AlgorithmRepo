@@ -116,4 +116,18 @@
   abstract  = {There has been considerable work on improving popular clustering algorithm `K-means' in terms of mean squared error (MSE) and speed, both. However, most of the k-means variants tend to compute distance of each data point to each cluster centroid for every iteration. We propose a fast heuristic to overcome this bottleneck with only marginal increase in MSE. We observe that across all iterations of K-means, a data point changes its membership only among a small subset of clusters. Our heuristic predicts such clusters for each data point by looking at nearby clusters after the first iteration of k-means. We augment well known variants of k-means with our heuristic to demonstrate effectiveness of our heuristic. For various synthetic and real-world datasets, our heuristic achieves speed-up of up-to 3 times when compared to efficient variants of k-means.},
   isbn      = {978-3-319-56608-5}
 }
-
+@article{LIKAS2003451,
+  title    = {The global k-means clustering algorithm},
+  journal  = {Pattern Recognition},
+  volume   = {36},
+  number   = {2},
+  pages    = {451-461},
+  year     = {2003},
+  note     = {Biometrics},
+  issn     = {0031-3203},
+  doi      = {https://doi.org/10.1016/S0031-3203(02)00060-2},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0031320302000602},
+  author   = {Aristidis Likas and Nikos Vlassis and Jakob {J. Verbeek}},
+  keywords = {Clustering, -Means algorithm, Global optimization, - Trees, Data mining},
+  abstract = {We present the global k-means algorithm which is an incremental approach to clustering that dynamically adds one cluster center at a time through a deterministic global search procedure consisting of N (with N being the size of the data set) executions of the k-means algorithm from suitable initial positions. We also propose modifications of the method to reduce the computational load without significantly affecting solution quality. The proposed clustering methods are tested on well-known data sets and they compare favorably to the k-means algorithm with random restarts.}
+}
