@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020/W32TeX) (preloaded format=xelatex 2021.1.17)  28 NOV 2021 12:09
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020/W32TeX) (preloaded format=xelatex 2021.1.17)  28 NOV 2021 14:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -525,28 +525,28 @@ LaTeX Warning: Citation `Least-squares-quantization-in-PCM' on page 2 undefined 
 
 LaTeX Warning: Citation `k-means' on page 2 undefined on input line 120.
 
-[2]
+[2] [3]
 
-LaTeX Warning: Citation `npc-prove' on page 3 undefined on input line 173.
-
-
-LaTeX Warning: Citation `Vattani_thehardness' on page 3 undefined on input line 173.
-
-[3] [4] [5]
-Underfull \hbox (badness 10000) in paragraph at lines 313--315
-
- []
+LaTeX Warning: Citation `npc-prove' on page 4 undefined on input line 176.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 325--327
+LaTeX Warning: Citation `Vattani_thehardness' on page 4 undefined on input line 176.
+
+[4] [5]
+Underfull \hbox (badness 10000) in paragraph at lines 316--318
 
  []
 
-[6] [7]
+
+Underfull \hbox (badness 10000) in paragraph at lines 328--330
+
+ []
+
+[6] [7] [8]
 No file sample.bbl.
 (d:/texlive/texlive2020/texlive/2020/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
-) [8]
+)
 
 Package fontspec Info: Could not resolve font "Microsoft YaHei Bold/I" (it
 (fontspec)             probably doesn't exist).
@@ -596,7 +596,7 @@ Package fontspec Info: Font family 'FangSong(0)' created for font 'FangSong'
 (fontspec)             <->"FangSong/OT:script=hani;language=dflt;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
- [9] [10] (./sample.aux)
+ [9] [10] [11] (./sample.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -608,10 +608,10 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  9744 strings out of 477220
  226810 string characters out of 5825121
- 799404 words of memory out of 5000000
+ 801140 words of memory out of 5000000
  29262 multiletter control sequences out of 15000+600000
  408684 words of font info for 84 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  101i,17n,104p,548b,2109s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on sample.pdf (10 pages).
+Output written on sample.pdf (11 pages).

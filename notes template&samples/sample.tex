@@ -167,7 +167,10 @@ So the function gets its minimum at $x = \frac{1}{n} \sum_{i=1}^{n}x_i$.
 \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
 That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
 \end{proof}
-
+\subsection{The K-means++ algorithm}
+The naive K-means algorithm do great work for the simplicity and efficiency, but it also has drawbacks. In the caes of initializing $k$ centroids using naive K-means algorithm (usually Lloyd's algorithm), we use randomization.
+The initial $k$ centroid are picked in the range of data set randomly. However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initail picked centroids.
+\par Here are a few figures showing the potential:
 
 \section{Key properties}
 K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course and try my best to get rid of copying original material.
