@@ -4,7 +4,9 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{epsfig}
 \usepackage[right=0.8in, top=1in, bottom=1.2in, left=0.8in]{geometry}
-\usepackage{setspace}
+\usepackage{setspace}\usepackage{graphicx} %插入图片的宏包
+\usepackage{float} %设置图片浮动位置的宏包
+\usepackage{subfigure} %插入多图时用子图显示的宏包
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}  % Use Input in the format of Algorithm
@@ -117,6 +119,7 @@ $$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c
 
 \section{Algorithms}
 \subsection{The K-means algorithm}
+\subsubsection{Algorithm Details}
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
 It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.\cite{k-means}
 \begin{enumerate}
@@ -168,10 +171,40 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
   That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
   \end{proof}
-  \subsection{The K-means++ algorithm}
+  \subsubsection{DrawBack}
   The naive K-means algorithm do great work for the simplicity and efficiency, but it also has drawbacks. In the caes of initializing $k$ centroids using naive K-means algorithm (usually Lloyd's algorithm), we use randomization.
-  The initial $k$ centroid are picked in the range of data set randomly. However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initail picked centroids.
+  The initial $k$ centroid are picked in the range of data set randomly. However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initial picked centroids.
   \par Here are a few figures showing the potential:
+\begin{figure}[H] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
+  \centering %图片居中
+  \includegraphics[width=0.5\textwidth]{goodCluster.png} %插入图片，[]中设置图片大小，{}中是图片文件名
+  \caption{Good Cluster} %最终文档中希望显示的图片标题
+  \label{Fig.GoodCluster} %用于文内引用的标签
+\end{figure}
+\begin{figure}[H] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
+  \centering %图片居中
+  \includegraphics[width=0.5\textwidth]{badCluster.png} %插入图片，[]中设置图片大小，{}中是图片文件名
+  \caption{Bad Cluster} %最终文档中希望显示的图片标题
+  \label{Fig.BadCluster} %用于文内引用的标签
+\end{figure}
+\par In the above images, the final formed clusters are pretty different. The good cluster's\cite{Fig.GoodCluster} initial $k$-centroids are initialized in different clusters, leading to a good result. While the other one's\cite{Fig.BadCluster} initial centroids were unfortunately initialized in the same cluster and got a result which was not as expected.
+\subsection{The K-means++ algorithm}
+The K-means++ algorithm was proposed by David Arthur and Sergei Vassilvitskii in 2006, which outperforms K-means in terms of both accuracy and speed \cite{kmeanspp}.
+\par The K-means++ algorithm uses totally a different way to initialize the $k$ centroids. Rather than uniformly randomly pick point in the range of all points, it uses special to make the $k$ centroids as far away from each other as possible.
+And the updated algorithm does exactly the same in the iteration steps. The algorithm goes as follows:
+\begin{enumerate}
+  \item Pick the first centroid $c_1$ randomly from the dataset $S$
+  \item Compute the distance of all points in the dataset from centroid $c_1$. The distance of a point $x$ could be calculated by $$ Dist(x, c_i) = {\left\lVert x-c_i\right\rVert } $$
+  \item Take a new centroid $c_i$, choosing $x_j \in $ from all points with probability $p_j$ $$p_j = \frac{Dist^2(x_j)}{\sum_{x_j \in S} Dist^2(x_j)} $$
+  \item Repeat the above steps until $k$ cetnroids are found
+  \item Iteration steps are exactly the same as navie K-means algorithm
+\end{enumerate}
+\par k-means++ consistently outperformed k-means, both by achieving a lower potential value,
+in some cases by several orders of magnitude, and also by completing faster. With the synthetic
+examples, the k-means method does not perform well, because the random seeding will inevitably
+merge clusters together, and the algorithm will never be able to split them apart. The careful
+seeding method of k-means++ avoids this problem altogether, and it almost always attains the
+optimal results on the synthetic datasets.\cite{kmeanspp}
 
 % opt 2
 \subsection{Reduce cost of single iteration}
