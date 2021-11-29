@@ -104,20 +104,19 @@ Note that this is a very rough definition. Part of common application domains in
 \end{definition}
 \par The k-means clustering problem is one of the oldest and most important questions in all of computational geometry. Given an integer $k$ and a set of $n$ data points in $\mathbb{R}^{d}$, the goal of this problem is to choose $k$ centers so as to minimize the total squared distance between each point and its closest center.\cite{kmeanspp}
 \par There are several kinds of k-means algorithms among which the most common algorithm , also called naive k-means algorithm, was first proposed by Stuart Lloyd\cite{Least-squares-quantization-in-PCM} of Bell Labs in 1957.
-\par For a k-means problem, we are given an integer $k$ and a set of data vector ($x_1, x_2, x_3 \dots x_n$) in $d$-dimension. And we need to choose $k$ centroids to partition the $n$ vectors into $k$ types $T$ ($T_1, T_2 \dots T_k$) with the minimum within-cluster sum of squares ($WCSS$)
-$$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c _i \right\rVert }^2  $$
-\par where $\mu_i$ is the mean of vector in set $S_i$.
+\par For a k-means problem, we are given an integer $k$ and a set of data vector ($x_1, x_2, x_3 \dots x_n$) in $d$-dimension. And we need to choose $k$ centroids to partition the $n$ vectors into $k$ types $T$ ($T_1, T_2 \dots T_k$) with the minimum within-cluster sum of squares ($WCSS$) cost:
+$$Cost(C_{1:k}, c_{1:k}) = \sum_{i=1}^{k} \sum_{x \in C_i } {\left\lVert x - c _i \right\rVert }^2  $$
+\par where $c_i$ is the centroid of cluster $C_i$.
 
 \begin{lemma}
-  Let $S$ be a set of points with its mean to be $\mu$, and let $c$ to be and arbitrary point.Then $\sum_{x \in S}{\left\lVert x - c\right\rVert}^2 = \sum_{x \in S}{\left\lVert x - \mu\right\rVert}^2 + \left\lvert S \right\rvert \cdot {\left\lVert z - \mu\right\rVert}^2 $
+  Let $C$ be a cluster of points with its mean to be $\mu$, and let $c$ to be and arbitrary point.Then $\sum_{x \in C}{\left\lVert x - c\right\rVert}^2 = \sum_{x \in C}{\left\lVert x - \mu\right\rVert}^2 + \left\lvert C \right\rvert \cdot {\left\lVert c - \mu\right\rVert}^2 $
 \end{lemma}
-\par So we minimize the function only when $c_i=\mu_i$
+\par So we denote that:
 \begin{equation*}
   \begin{split}
-    \mathcal{WCSS} & = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c _i \right\rVert }^2 \\
-    & = \arg \min \sum_{i=1}^{k} (\sum_{x \in S_i} {\left\lVert x - \mu_i\right\rVert}^2 + \left\lvert S_i \right\rvert \cdot {\left\lVert c_i - \mu_i\right\rVert}^2) \\
-    & = \arg \min \sum_{i=1}^{k} {\left\lvert S_i \right\rvert }\cdot Var S_i \\
-    & = \arg \min \sum_{i=1}^{k} \frac{1}{2\cdot\left\lvert S_i\right\rvert } \sum_{x,y \in S_i} {\left\lVert x_i - y_i\right\rVert }^2
+    Cost(C_{1:k}, c_{1:k}) & = \sum_{i=1}^{k} \sum_{x \in C_i } {\left\lVert x - c _i \right\rVert }^2 \\
+    & = \sum_{i=1}^{k} (\sum_{x \in C_i} {\left\lVert x - \mu_i\right\rVert}^2 + \left\lvert C_i \right\rvert \cdot {\left\lVert c_i - \mu_i\right\rVert}^2) \\
+    & = Cost(C_{1:k}, mean(C_{1:k})) + \sum_{i=1}^{k} {\left\lvert C_i\right\rvert }\cdot {\left\lVert c_i - \mu_i\right\rVert }^2
   \end{split}
 \end{equation*}
 
@@ -129,10 +128,10 @@ $$\mathcal{WCSS} = \arg \min \sum_{i=1}^{k} \sum_{x \in S_i } {\left\lVert x - c
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
 It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.\cite{k-means}
 \begin{enumerate}
-  \item Arbitrarily choose and initial $k$ centers $\mathcal{C} = \{c_1, c_2 \dots c_k\}$
+  \item Arbitrarily choose and initial $k$ centroids $\mathcal{C} = \{c_1, c_2 \dots c_k\}$
   \item For each $i \in \{1, 2 \dots k\}$, set the cluster $C_i$ to be the set of points that are closer to $c_i$ than they are to $c_j$ for all $j \neq i$
-  \item For each $i \in \{1, 2 \dots k\}$, set $c_i$ to be the center of all points in $C_i$ 
-  \item Repeat Step 2 and Step 3 until $\mathcal{C}$ no longer changes.
+  \item For each $i \in \{1, 2 \dots k\}$, set $c_i$ to be the center of all points in $C_i$ where $c_i = \frac{1}{\left\lvert C_i \right\rvert }\sum_{x \in C_i} x $
+  \item Repeat Step 2 and Step 3 until $C$ no longer changes.
 \end{enumerate}
 \begin{algorithm}
   \caption{K-means}
@@ -157,9 +156,10 @@ It iteratively calculates the sum of distance within a cluster and updates the p
     \ENSURE {$\mathcal{S}$ : set of all clusters $S_i$}
   \end{algorithmic}
 \end{algorithm}
-
-\begin{proof}
+\begin{lemma}
   Let $x_1, x_2 \dots x_n$ be n vectors in $\mathbb{R}^{d}$, then $f(x) = \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2 $ gets its minimum iff. $x = \frac{1}{n} \sum_{i=1}^{n}x_i$
+\end{lemma}
+\begin{proof}
   \begin{equation*}
     \begin{split}
       \frac{d f(x)}{d x} &=  \frac{d \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2}{d x} \\
@@ -172,31 +172,45 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \par $x = \frac{1}{n} \sum_{i=1}^{n}x_i$ is a stationary point of this function. Owing that it is a strictly convex function, the stationary point is alse the only minimun point of that function. 
   So the function gets its minimum at $x = \frac{1}{n} \sum_{i=1}^{n}x_i$.
   \end{proof}
+  % \begin{proof}
+  %   Updated value $f(x'')$ is strictly less than the original $f(x')$ where  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$.
+  % \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
+  % That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
+  % \end{proof}
+  \subsubsection{Convergence}
+  \begin{lemma}
+    During the course of the k-means algorithm, the cost monotonically decreases.
+  \par 
+  \end{lemma}
   \begin{proof}
-    Updated value $f(x'')$ is strictly less than the original $f(x')$ where  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$.
-  \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
-  That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
+    Let $c_1^{(t)}, \dots c_k^{(t)}, C_1^{(t)}, \dots C_k^{(t)}$ denote the cetnroids and clusters at the start of $t^{th}$ iteration of K-means.
+    The first step of the iteration assigns each point to its nearest center, therefore:
+    $$Cost(C_{1:k}^{(t+1)}, c_{1:k}^{(t)}) \leq Cost(C_{1:k}^{(t)}, c_{1:k}^{(t)})$$
+    On the second step, each cluster re-centered at its mean. By Lemma 3:
+    $$Cost(C_{1:k}^{(t+1)}, c_{1:k}^{(t+1)}) \leq Cost(C_{1:k}^{(t+1)}, c_{1:k}^{(t)})$$
   \end{proof}
-  \begin{proof}
-  Naive K-means algorithm's time complexity is $O(k*n*i)$
-  \par In each iteration there are such steps:
-  \begin{itemize}
-    \item Distance calculation: To calculate the distance from a point to the centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
-    \item Comparisons betweeen distances.
-    \item Centroid calculation.
-  \end{itemize}
-  \par So the total number of operations in one iteration is:
-  \begin{equation*}
-    \begin{split}
-      C &=  distance\ calculation + comparisons + centroids\ calculation\\
-      & = k * n * O(1) + (k-1) * n * O(1) + k * n * O(1) \\
-      & = O(kn)
-    \end{split}
-  \end{equation*}
-  \par where k denotes the number of clusters, n denotes the count of data vectors and d denotes vector dimension.
-  \par And the whole process takes $i$ iterations in total so the time complexity of K-means algorithm is $O(kni)$.
 
-  \end{proof}
+  \subsubsection{Time Complexity}
+  \begin{proof}
+    Naive K-means algorithm's time complexity is $O(k*n*i)$
+    \par In each iteration there are such steps:
+    \begin{itemize}
+      \item Distance calculation: To calculate the distance from a point to the centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
+      \item Comparisons betweeen distances.
+      \item Centroid calculation.
+    \end{itemize}
+    \par So the total number of operations in one iteration is:
+    \begin{equation*}
+      \begin{split}
+        C &=  distance\ calculation + comparisons + centroids\ calculation\\
+        & = k * n * O(1) + (k-1) * n * O(1) + k * n * O(1) \\
+        & = O(kn)
+      \end{split}
+    \end{equation*}
+    \par where k denotes the number of clusters, n denotes the count of data vectors and d denotes vector dimension.
+    \par And the whole process takes $i$ iterations in total so the time complexity of K-means algorithm is $O(kni)$.
+    \end{proof}
+
   \subsubsection{DrawBack}
   The naive K-means algorithm do great work for the simplicity and efficiency, but it also has drawbacks. In the caes of initializing $k$ centroids using naive K-means algorithm (usually Lloyd's algorithm), we use randomization.
   The initial $k$ centroid are picked in the range of data set randomly. However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initial picked centroids.
