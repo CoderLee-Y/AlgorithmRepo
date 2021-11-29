@@ -97,6 +97,9 @@ Note that this is a very rough definition. Part of common application domains in
 \par Today we'll start from the naive K-means clustering and improve the algorithm step by step. The lecture has X main topics that we'll go through, i.e. TODO AL LAST!!
 
 \section{Problem Description}
+\begin{definition}
+\textbf{Cluster centroid} is the middle of a cluster. A centroid is a vector that contains one number for each variable, where each number is the mean of a variable for the observations in that cluster. The centroid can be thought of as the multi-dimensional average of the cluster.
+\end{definition}
 \par The k-means clustering problem is one of the oldest and most important questions in all of computational geometry. Given an integer $k$ and a set of $n$ data points in $\mathbb{R}^{d}$, the goal of this problem is to choose $k$ centers so as to minimize the total squared distance between each point and its closest center.\cite{kmeanspp}
 \par There are several kinds of k-means algorithms among which the most common algorithm , also called naive k-means algorithm, was first proposed by Stuart Lloyd\cite{Least-squares-quantization-in-PCM} of Bell Labs in 1957.
 \par For a k-means problem, we are given an integer $k$ and a set of data vector ($x_1, x_2, x_3 \dots x_n$) in $d$-dimension. And we need to choose $k$ centroids to partition the $n$ vectors into $k$ types $T$ ($T_1, T_2 \dots T_k$) with the minimum within-cluster sum of squares ($WCSS$)
@@ -235,9 +238,7 @@ Let $A$ be any variant algorithm of K-means problem and $B$ be the same variant 
 
 \subsubsection{Augmentation detail}
 \par We assume that $k^{\prime}$ is significantly smaller than $k$. We will show how to choose $k^{\prime}$ later.We build candidate cluster list (CCL) based on top $k^{\prime}$ nearest clusters to the data point after first iteration of K-means. \par
-\begin{definition}
-\textbf{Cluster centroid} is the middle of a cluster. A centroid is a vector that contains one number for each variable, where each number is the mean of a variable for the observations in that cluster. The centroid can be thought of as the multi-dimensional average of the cluster.
-\end{definition}
+
 Consider a data point p1 and cluster centroids represented as $c_1$, $c_2$..., $c_k$. We assume that $k^{\prime}$ = 4, and $k^{\prime} << k $. After first iteration of K-means $c_5$, $c_6$, $c_8$, and $c_{11}$ are the top four closest centroids to $p_1$ in the increasing order of distance. This is the candidate cluster list for $p_1$. If we run K-means for second iteration, $p_1$ will compute distance to all k centroids. After second iteration, there are two possible cases:
 \begin{enumerate}
 \item The list do not change but only members'ranking changes.
@@ -325,7 +326,7 @@ Logically, step (2) is redundant because its effect is achieved by condition 3(i
 The most significant part is step (3), we use many strictions to avoid redundant computations. In 3(a) step, we only compute $d(x,c(x))$ for at most one time. Just when in pervious step (7) r(x) is set to True, we update  $d(x,c(x))$, or else we use u(x) to replace. Why step 3's strictions are effcient is that at the start of each iteration, the upper bounds and lower bounds for x are tight enough. If at $j^{th}$ iteration is tight, it'll be tight at $(j+1)^{th}$ iteration, because the location of most centers changes only slightly, and hence the bounds change only slightly. \par
 
 \subsubsection{Augmentation analysis}
-Compared to original algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms for $ 11.3 \times -  351 \times$.
+Compared to original algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
 
 % Opt 4
 \subsection{Choose a proper K}
