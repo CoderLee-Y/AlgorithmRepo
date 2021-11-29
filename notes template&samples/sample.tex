@@ -175,6 +175,26 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
   That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
   \end{proof}
+  \begin{proof}
+  Naive K-means algorithm's time complexity is $O(k*n*i)$
+  \par In each iteration there are such steps:
+  \begin{itemize}
+    \item Distance calculation: To calculate the distance from a point to the centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
+    \item Comparisons betweeen distances.
+    \item Centroid calculation.
+  \end{itemize}
+  \par So the total number of operations in one iteration is:
+  \begin{equation*}
+    \begin{split}
+      C &=  distance\ calculation + comparisons + centroids\ calculation\\
+      & = k * n * O(1) + (k-1) * n * O(1) + k * n * O(1) \\
+      & = O(kn)
+    \end{split}
+  \end{equation*}
+  \par where k denotes the number of clusters, n denotes the count of data vectors and d denotes vector dimension.
+  \par And the whole process takes $i$ iterations in total so the time complexity of K-means algorithm is $O(kni)$.
+
+  \end{proof}
   \subsubsection{DrawBack}
   The naive K-means algorithm do great work for the simplicity and efficiency, but it also has drawbacks. In the caes of initializing $k$ centroids using naive K-means algorithm (usually Lloyd's algorithm), we use randomization.
   The initial $k$ centroid are picked in the range of data set randomly. However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initial picked centroids.
@@ -212,7 +232,7 @@ The K-means++ algorithm was proposed by David Arthur and Sergei Vassilvitskii in
 And the updated algorithm does exactly the same in the iteration steps. The algorithm goes as follows:
 \begin{enumerate}
   \item Pick the first centroid $c_1$ randomly from the dataset $S$
-  \item Compute the distance of all points in the dataset from centroid $c_1$. The distance of a point $x$ could be calculated by $$ Dist(x, c_i) = {\left\lVert x-c_i\right\rVert } $$
+  \item Compute the distance of all points in the dataset from nearest, previously chosen centroid $c_i$. The distance of a point $x$ could be calculated by $$ Dist(x) =\min_{c_i \in C} {\left\lVert x-c_i\right\rVert } $$
   \item Take a new centroid $c_i$, choosing $x_j \in $ from all points with probability $p_j$ $$p_j = \frac{Dist^2(x_j)}{\sum_{x_j \in S} Dist^2(x_j)} $$
   \item Repeat the above steps until $k$ cetnroids are found
   \item Iteration steps are exactly the same as navie K-means algorithm
@@ -223,6 +243,25 @@ examples, the k-means method does not perform well, because the random seeding w
 merge clusters together, and the algorithm will never be able to split them apart. The careful
 seeding method of k-means++ avoids this problem altogether, and it almost always attains the
 optimal results on the synthetic datasets.\cite{kmeanspp}
+\begin{proof}
+  K-means++ algorithm's initialization time complexity is $O(k*n*d)$
+  \par In each iteration there are such steps:
+  \begin{itemize}
+    \item Distance calculation: To calculate the distance from a point to a newly selected centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
+    \item Comparisons betweeen distances.
+    \item Centroid calculation.
+  \end{itemize}
+  \par So the total number of operations in $i^{th}$ iteration is:
+  \begin{equation*}
+    \begin{split}
+      C_i &=  distance\ calculation + comparisons + centroids\ selection\\
+      & = n * O(1) + * n * O(1) + O(1) \\
+      & = O(n)
+    \end{split}
+  \end{equation*}
+  \par where k denotes the number of clusters, n denotes the count of data vectors.
+  \par And the whole process takes $k$ iterations in total so the time complexity of K-means++'s initialization is $O(kn)$.
+\end{proof}
 
 % opt 2
 \subsection{Reduce cost of single iteration}
