@@ -235,6 +235,63 @@
 
 \end{frame}
 
+\section{K-means optimizations}
+
+\begin{frame}
+	\frametitle{K-means++ Algorithm}
+	The K-means++ algorithm was proposed by David Arthur and Sergei Vassilvitskii in 2006, which outperforms K-means in terms of both accuracy and speed.
+	\pause
+	\par The K-means++ algorithm uses totally a different way to initialize the $k$ centroids. Rather than uniformly randomly pick point in the range of all points, it uses special to \ccp{make the $k$ centroids as far away from each other} as possible.
+	In this way, the results are always good as expected.
+	\pause
+	\par And the updated algorithm does exactly the same in the iteration steps.
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{K-means++ Algorithm}
+	The algorithm goes as follows:
+	\begin{enumerate}
+		\item Pick the first centroid $c_1$ \ccp{randomly} from the dataset $S$
+		\item Compute the distance of all points in the dataset from \ccp{nearest, previously chosen centroid $c_i$}. The distance of a point $x$ could be calculated by \ccb{$$ Dist(x) =\min_{c_i \in C} {\left\lVert x-c_i\right\rVert } $$}
+		\item Take a new centroid $c_i$, choosing $x_j \in $ from all points with probability $p_j$ \ccb{$$p_j = \frac{Dist^2(x_j)}{\sum_{x_j \in S} Dist^2(x_j)} $$}
+		\item \ccp{Repeat} the above steps until $k$ cetnroids are found
+		\item Iteration steps are exactly the same as naive K-means algorithm
+	\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{K-means++ Algorithm}
+	\begin{proof}
+		K-means++ algorithm's initialization time complexity is $O(k*n)$
+	\end{proof}
+		\par In each iteration there are such steps:
+		\begin{itemize}
+			\item Distance calculation: To calculate the distance from a point to a newly selected centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
+			\item Comparisons betweeen distances.
+			\item Centroid calculation.
+		\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{K-means++ Algorithm}
+	\begin{proof}
+		K-means++ algorithm's initialization time complexity is $O(k*n)$
+	\end{proof}
+		\par So the total number of operations in $i^{th}$ iteration is:
+		\begin{equation*}
+			\begin{split}
+				C_i &=  distance\ calculation + comparisons + centroids\ selection\\
+				& = n * O(1) + n * O(1) + O(1) \\
+				& = O(n)
+			\end{split}
+		\end{equation*}
+		\par where k denotes the number of clusters, n denotes the count of data vectors.
+		\par And the whole initializing process takes $k$ iterations in total so the time complexity of K-means++'s initialization is $O(kn)$.
+
+\end{frame}
+
 %% Lee begins here
 %% avoid redundant
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%

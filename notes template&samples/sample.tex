@@ -261,7 +261,7 @@ merge clusters together, and the algorithm will never be able to split them apar
 seeding method of k-means++ avoids this problem altogether, and it almost always attains the
 optimal results on the synthetic datasets.\cite{kmeanspp}
 \begin{proof}
-  K-means++ algorithm's initialization time complexity is $O(k*n*d)$
+  K-means++ algorithm's initialization time complexity is $O(k*n)$
   \par In each iteration there are such steps:
   \begin{itemize}
     \item Distance calculation: To calculate the distance from a point to a newly selected centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
@@ -272,7 +272,7 @@ optimal results on the synthetic datasets.\cite{kmeanspp}
   \begin{equation*}
     \begin{split}
       C_i &=  distance\ calculation + comparisons + centroids\ selection\\
-      & = n * O(1) + * n * O(1) + O(1) \\
+      & = n * O(1) + n * O(1) + O(1) \\
       & = O(n)
     \end{split}
   \end{equation*}
