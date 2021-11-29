@@ -77,6 +77,14 @@
 	\end{itemize}
 \end{frame}
 
+%%//////////////////////////////////////////////////////////////////////////////////////////////%%
+\begin{frame}
+		\frametitle{Face clustering}
+Face clustering is a very hot research area. In recent years, many streaming media platforms use this technique.\par
+	\centerline{\includegraphics[width=0.65\textwidth]{figures/aiqiyi.png}}
+\end{frame}
+
+
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%1
 \section{K-means Algorithm}
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
@@ -403,6 +411,15 @@
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
+	\frametitle{Speed up}
+From 3448 seconds to 51 seconds, with centroid moving little distance.
+\centerline{\includegraphics[width=0.65\textwidth]{figures/sparse.png}}
+
+\end{frame}
+
+
+%%//////////////////////////////////////////////////////////////////////////////////////////////%%
+\begin{frame}
 	\frametitle{Choose a proper K}
 	\ccp{Use a range of set}: We choose a set of K and compare their performance. In this set, we need to choose k \ccp{significantly smaller than the number of objects in the data sets and let it be resonably large based on this}.\par
 
@@ -423,6 +440,22 @@
 
 \end{frame}
 
+%%//////////////////////////////////////////////////////////////////////////////////////////////%%
+\begin{frame}
+	\frametitle{Visualization example}
+a) 4 clusters, b) 3 clusters, c) 8 clusters.
+\centerline{\includegraphics[width=0.65\textwidth]{figures/vis.png}}
+
+\end{frame}
+
+%%//////////////////////////////////////////////////////////////////////////////////////////////%%
+\begin{frame}
+	\frametitle{Visualization example}
+Combine many methods and create a function f(k) to tune K value.
+\centerline{\includegraphics[width=0.65\textwidth]{figures/vis2.png}}
+
+\end{frame}
+
 \section{Key properties}
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
@@ -438,14 +471,16 @@ A team uses Principal Component Analysis (PCA)  while determining the centroids.
 Their flowchart of centroids deciding:
 \centerline{\includegraphics[width=0.65\textwidth]{figures/COVID19.png}}
 
-\end{frame}
 
+
+\end{frame}
 
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
-	\frametitle{Discussion}
-
+	\frametitle{COVID-19 Dataset}
+Their result:
+\centerline{\includegraphics[width=0.65\textwidth]{figures/covidResult.png}}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
