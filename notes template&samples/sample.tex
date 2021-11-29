@@ -449,7 +449,12 @@ But to be honest, we have to argue that their research just used K-means to gene
 \section{Conclusion}
 Bringing in the K-means algorithm from the beginning, we give the initailization strategy and iteration steps of naive K-keans algorithm.
 Given the proof that the object function decrements in iteration, the objective always converges at a certain point in time. But the drawbacks are annoying and fatal, which may lead to far different results than expected and increase of iterations, so we have some optimization of them, bring us K-means++ and some other way to select initial centroids, avoid redundant computation, select proper magic number $k$ etc.
-K-means are wildly used in many aspects of life, making it easier to do customer-partitioning, clsasifying documents, optimizing resource allocation, pattern recognizing in images and so many other application in industry and daily life.
+K-means are wildly used in many aspects of life, making it easier to do customer-partitioning, clsasifying documents, optimizing resource allocation, pattern recognizing in images and so many other application in industry and daily life.\par
+Finally, we would like to give out some open questions we have about K-means for further research.
+\begin{itemize}
+\item \textbf{Lower bound of calculations:} Whether one can find a lower bound on how many distance calculations are needed by any implementation of exact K-means? With a theoretical lower bound, we can futher speed up the algorithm.
+\item \textbf{Use running time information to find K:} We found all papers don't take full advantage of information from running time. Can we fine tune the value of K during running the algorithm?
+\end{itemize}
 
 \bibliographystyle{IEEEtran}
 \bibliography{ref.bib}
