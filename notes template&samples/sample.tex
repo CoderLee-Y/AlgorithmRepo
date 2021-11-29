@@ -13,6 +13,7 @@
 \renewcommand{\algorithmicensure}{\textbf{Output:}} % Use Output in the format of Algorithm
 \usepackage{listings}
 \usepackage{ctex}
+\usepackage[backref]{hyperref}
 
 % 用来设置附录中代码的样式
 
@@ -126,7 +127,7 @@ $$Cost(C_{1:k}, c_{1:k}) = \sum_{i=1}^{k} \sum_{x \in C_i } {\left\lVert x - c _
 \subsection{The K-means algorithm}
 \subsubsection{Algorithm Details}
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
-It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.
+It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.~\ref{k-means}
 \begin{enumerate}
   \item Arbitrarily choose and initial $k$ centroids $\mathcal{C} = \{c_1, c_2 \dots c_k\}$
   \item For each $i \in \{1, 2 \dots k\}$, set the cluster $C_i$ to be the set of points that are closer to $c_i$ than they are to $c_j$ for all $j \neq i$
@@ -227,7 +228,7 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \caption{Bad Cluster} %最终文档中希望显示的图片标题
   \label{Fig.BadCluster} %用于文内引用的标签
 \end{figure}
-\par In the above images, the final formed clusters are pretty different. The good cluster's\cite{Fig.GoodCluster} initial $k$-centroids are initialized in different clusters, leading to a good result. While the other one's\cite{Fig.BadCluster} initial centroids were unfortunately initialized in the same cluster and got a result which was not as expected.
+\par In the above images, the final formed clusters are pretty different. The good cluster's~\ref{Fig.GoodCluster} initial $k$-centroids are initialized in different clusters, leading to a good result. While the other one's~\ref{Fig.BadCluster} initial centroids were unfortunately initialized in the same cluster and got a result which was not as expected.
 
 % sum of optimiazation
 \subsection{Optimization of K-means}
