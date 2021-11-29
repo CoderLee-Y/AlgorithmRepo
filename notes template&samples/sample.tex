@@ -156,6 +156,7 @@ It iteratively calculates the sum of distance within a cluster and updates the p
     \ENSURE {$\mathcal{S}$ : set of all clusters $S_i$}
   \end{algorithmic}
 \end{algorithm}
+\subsubsection{Convergence}
 \begin{lemma}
   Let $x_1, x_2 \dots x_n$ be n vectors in $\mathbb{R}^{d}$, then $f(x) = \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2 $ gets its minimum iff. $x = \frac{1}{n} \sum_{i=1}^{n}x_i$
 \end{lemma}
@@ -177,7 +178,6 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   % \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
   % That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
   % \end{proof}
-  \subsubsection{Convergence}
   \begin{lemma}
     During the course of the k-means algorithm, the cost monotonically decreases.
   \par 
