@@ -84,7 +84,7 @@
 \section{Introduction}
 Clustering can be considered the most important unsupervised learning problem; As every other problem of this kind, it deals with finding a structure in a collection of unlabeled data.
 \begin{definition}
-A cluster is a collection of objects which are “similar” between them and are “dissimilar” to the objects belonging to other clusters. Clustering is the algorithm that recognizes clusters from a given data set.
+A cluster is a collection of objects which are "similar" between them and are "dissimilar" to the objects belonging to other clusters. Clustering is the algorithm that recognizes clusters from a given data set.
 \end{definition}
 Note that this is a very rough definition. Part of common application domains in which the clustering problem arises are as follows:
 \begin{itemize}
@@ -232,8 +232,8 @@ It iteratively calculates the sum of distance within a cluster and updates the p
 
 % sum of optimiazation
 \subsection{Optimization of K-means}
-In last several decades, there has been significant work on improving Lloyd’s algorithm both in terms of reducing MSE and running time. The follow up
-work on Lloyd’s algorithm can be broadly divided into three categories:
+In last several decades, there has been significant work on improving Lloyd's algorithm both in terms of reducing MSE and running time. The follow up
+work on Lloyd's algorithm can be broadly divided into three categories:
 \begin{enumerate}
 \item Better seed selection
 \item Selecting ideal value for number of clusters
@@ -416,7 +416,7 @@ When K-means clustering is used as a pre-processing tool, the number of clusters
 \section{Key properties}
 \subsection{K-means problem is NP Complete}
 K-means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness}  For lack of space, we won't describe their proof in detail. For reduction from planar 3-SAT to k-means, the author corresponds a simple circuit to each variable $x_i$ in 3-SAT. And each circuit has an even number of vertices marked on it. Circuits are partitioned into pairs of adjacent vertices according to the value of $x_i$. Then, each edge becomes a representation of value. The authors set the distance between vertices and uniquely determine a layout that gives a correct reduction from planar 3-SAT to planar k-means. We spent much time on this paper but still couldn't illustrate it clearly. Please refer to origin paper. \par
-But anyway we can use K-means to solve 3-SAT. That is, K-means problem is NP-Complete problem. Existing local search algorithms that computes a certain local (and not necessarily global) optimum for this problem are what we really feel interested in. In fact, Lloyd’s algorithm and its variants never  provide any significant guarantee about how well the solution that it computes approximates the optimal solution, but just "reasonable approximation guarantees".
+But anyway we can use K-means to solve 3-SAT. That is, K-means problem is NP-Complete problem. Existing local search algorithms that computes a certain local (and not necessarily global) optimum for this problem are what we really feel interested in. In fact, Lloyd's algorithm and its variants never  provide any significant guarantee about how well the solution that it computes approximates the optimal solution, but just "reasonable approximation guarantees".
 
 \subsection{Algorithm complexity analysis}
 Please check our section 3 and every algorithm's complexity is analyzed soon after we give out its details.
@@ -424,7 +424,7 @@ Please check our section 3 and every algorithm's complexity is analyzed soon aft
 \section{Application}
 In real world, K-means are widely used in clustering for its simplicity and effcient. Its core concept is extremely easy to understand and the updated version algorithm itself only cost a few iterations to output pretty good results. And here are a few applications of K-means algorithm in real life.
 \subsection{Customer Segmentation}
-The segmentation of the customers’ base allows operators to better serve customers and target advertising precisely to them\cite{Bcil2012PrepaidTC}.
+The segmentation of the customers' base allows operators to better serve customers and target advertising precisely to them\cite{Bcil2012PrepaidTC}.
 The concept of segmentation relies on the high probability of persons grouped into segments based on common demands and behaviours to have a similar response to marketing strategies.
 \par And the concept of segmentation coincides with that of clustering. A company can run K-means analysis base on customers' consumption habits, browsing histories, financial conditions and many other features to precisely partition their customers into different clusters so that they can implement different strategies.\cite{Bcil2012PrepaidTC}
 \subsection{Optimization of Truck-Drone Delivery Netword}
