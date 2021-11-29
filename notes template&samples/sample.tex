@@ -101,7 +101,7 @@ Note that this is a very rough definition. Part of common application domains in
 
 \section{Problem Description}
 \begin{definition}
-\textbf{Cluster centroid} is the middle of a cluster. A centroid is a vector that contains one number for each variable, where each number is the mean of a variable for the observations in that cluster. The centroid can be thought of as the multi-dimensional average of the cluster.
+\textbf{Cluster centroid}(or center) is the middle of a cluster. A centroid is a vector that contains one number for each variable, where each number is the mean of a variable for the observations in that cluster. The centroid can be thought of as the multi-dimensional average of the cluster.
 \end{definition}
 \par The k-means clustering problem is one of the oldest and most important questions in all of computational geometry. Given an integer $k$ and a set of $n$ data points in $\mathbb{R}^{d}$, the goal of this problem is to choose $k$ centers so as to minimize the total squared distance between each point and its closest center.\cite{kmeanspp}
 \par There are several kinds of k-means algorithms among which the most common algorithm , also called naive k-means algorithm, was first proposed by Stuart Lloyd\cite{Least-squares-quantization-in-PCM} of Bell Labs in 1957.
@@ -332,12 +332,12 @@ $$
 This can be easily proved by Lemma 7. So we can assert that:
 
 \begin{claim}
-If center moved a small distance$(d(s,c) is small)$, the lower bound only make a small move.
+If center moved a small distance$(d(s,c)$ is small, the lower bound only make a small move.
 \end{claim}
 
 \subsubsection{Augmentation detail}
 In practical application, as the centers are converging to their final positions, the vast majority of the data points have the same closest center from one stage to the next. A good algorithm would exploit this coherence to improve running time. We use $u(x)$ to represent upper bound of distance between a given point $x$ and its currently assigned center $c$. $l(x,c^{\prime})$ is the lower bound on the distance between x and some other center $c^{\prime}$. If $u(x) \le l(x,c^{\prime}) $, we don't need to calculate $d(x,c), d(x, c^{\prime})$. \par
-Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x to its closest initial center, using Lemma 1 to firstly reduce redundant distance computations. Each time $d(x,c)$ is computed, set $l(x,c)=d(x,c)$. At last, set upper bounds $u(x) = min_c(d(x,c))$. Then repeate this until convergence.(Each time $d(x,c)$ is calculated, we update $l(x,c)$. Similarly $u(x)$ when computing $d(x,c(x))$.)
+Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x to its closest initial center, using Lemma 6 to firstly reduce redundant distance computations. Then repeate this until convergence.(Each time $d(x,c)$ is calculated, we update $l(x,c)$. Similarly $u(x)$ when computing $d(x,c(x))$.)
 
 \begin{enumerate}
 \item For all centers c and $c^{\prime}$, compute $d(c, c^{\prime})$. Set $s(c) = \frac{1}{2}min_{c \ne c^{\prime}}d(c,c^{\prime})$.
@@ -362,7 +362,7 @@ Compared to naive K-means++ algorithm, in 6 typical benchmark, using this optima
 
 % opt 3
 \subsection{Relax the restriction}
-In fact, the previous augmentation is designed under strict limitations. Still based on the same observation, the team of Siddhesh Khandelwal\cite{Faster} makes contributions to help reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. This augmentation makes trade-off between loss function and running tim and relaxes the previous algorithm's restrictions. We'll show how this heuristic works in detail.
+In fact, the previous augmentation is designed under strict limitations. Still based on the same observation, the team of Siddhesh Khandelwal\cite{Faster} makes contributions to help reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. This augmentation makes trade-off between loss function and running time and relaxes the previous algorithm's restrictions. We'll show how this heuristic works in detail.
 
 \subsubsection{Inspiration}
 The optimization is based on the observation that across all iterations of K-means or K-means$++$, a data point changes its membership only among a small subset of clusters. The heuristic considers only a subset of \textbf{nearby cluster as candidates} for deciding membership for a data point. This heuristic has advantage of speeding up K-means and K-means$++$ clustering with marginal increase in loss functuion(MSE in our case). Note that the optimization can be applied in any algorithm to solve K-means problem with steps to caculate distance between points and centers, acting as augmentation.
