@@ -348,15 +348,9 @@ visualization techniques implies a data distribution continuity in the expected 
 When K-means clustering is used as a pre-processing tool, the number of clusters is determined by the specific requirements of the main processing algorithm. No attention is paid to the effect of the clustering results on the performance of this algorithm. In such applications, the K-means algorithm is employed just as a black box without validation of the clustering result. \par
 
 \section{Key properties}
-K means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness} Next, I'll try to describe the reduction from 3-SAT to k-means since NP-Complete problem is an inescapable topic in algorithm course. But I'll only describe informally.
-\subsection{Reduction from 3-SAT to K-means}
-Let {F} be the given planar 3-SAT instance with n variables and m clauses. We construct an instance I of planar k-means corresponding to F. Properties of layout I are listed below:
-\begin{enumerate}
-\item Each variable $x_i$ corresponds to a simple circuit $s_i$ in the plane and each circuit has an even number Q of vertices. Each vertex on such a circuit have M copies of a point. Note that M and Q will be stricted below. Now we can partiution
-\item b
-\item cc
-\end{enumerate}
+K-means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness}  For lack of space, we won't describe their proof in detail. For reduction from planar 3-SAT to k-means, the author corresponds a simple circuit to each variable $x_i$ in 3-SAT. And each circuit has an even number of vertices marked on it. Circuits are partitioned into pairs of adjacent vertices according to the value of $x_i$. Then, each edge becomes a representation of value. The authors set the distance between vertices and uniquely determine a layout that gives a correct reduction from planar 3-SAT to planar k-means. Then we can use K-means to solve 3-SAT. That is, K-means problem is NP-Complete problem.
 
+\section{Conclusion}
 
 \section{Application}
 In real world, K-means are widely used in clustering for its simplicity and effcient. Its core concept is extremely easy to understand and the updated version algorithm itself only cost a few iterations to output pretty good results. And here are a few applications of K-means algorithm in real life.
