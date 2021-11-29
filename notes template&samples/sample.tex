@@ -240,7 +240,7 @@ There are 3 properties the accelerated K-means algorithm should satisfy:
 \item \textbf{Correct results, } it always produces exactly the same final centers as the standard  algorithm.
 \item \textbf{Support any black-box distance metric,} so it should not rely for example on optimizations specific to Euclidean distance.
 \end{itemize} \par
-This strong properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers(e.g. ISODATA, which not memtioned in our note) can be used together with the new algorithm.
+This strong properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers(like  ISODATA, which not memtioned in our note) can be used together with the new algorithm.
 
 \subsubsection{Preliminary results}
 The algorithm firstly find the only black box property of any distance metrics. That is: for any 3 points $x, y, z$, satisfy  triangle inequality:
@@ -250,31 +250,33 @@ Let x be a point and let b and c be centers, we need to know that $d(x, c) \ge d
 Let x be a point and let b and c be centers. If $d(b, c) \ge 2d(x,b)$ then $d(x,c) \ge d(x,b)$.
 \end{lemma}
 \begin{proof}
-Use  triangle inequality, $d(b,c) - d(x,b)\le d(x,c)$. Use "if" in lemma, we can get the conclusion.
+Use triangle inequality, $d(b,c) - d(x,b)\le d(x,c)$. And bring in $d(b, c) \ge 2d(x,b)$, we can get the conclusion.
 \end{proof}
 \begin{lemma}
-Let x be a point and let b and c be centers.$d(x,c) \ge max(0, d(x,b)-d(b,c))$.
+Let x be a point and let b and c be centers. $d(x,c) \ge max(0, d(x,b)-d(b,c))$.
 \end{lemma}
 \begin{proof}
-Use triangle inequality, with $d(x,c) \ge 0$, easily get lemma 5.
+Use triangle inequality $d(x,c) \ge d(x,b)-d(b,c)$, with $d(x,c) \ge 0$, we can get the conclusion.
 \end{proof}
 
-Let x be any data point, let c be the center to which is currently assigned, let s become any other center. So with the lemma, we can assert that:
-\begin{claim}
-if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we don't need to compute $d(x,s)$. (Proved by lemma)
-\end{claim}
-\begin{claim}
-Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .(Proved by claim)
-\end{claim}
-\begin{claim}
-Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided. (Proved by claim)
-\end{claim}
+Let $x$ be any data point, let $c$ be the center to which is currently assigned, let s become any other center. So with the lemma, we can assert that:
+\begin{corollary}
+if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we don't need to compute $d(x,s)$. (Proved by Lemma 4)
+\end{corollary}
 
-Next, Let x be any data point, let c be any center, let s become previous version of smae center. Suppose that in the previous iteration we knew a lower bound g such that $d(x, s) \ge g$. Then we can infer a lower bound h for current iteration:
+\begin{corollary}
+Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .(Proved by Corollary 6)
+\end{corollary}
+\begin{corollary}
+Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided. (Proved by Corollary 7)
+\end{corollary}
+
+Next, Let $x$ be any data point, let $c$ be any center, let s become previous version of same center. Suppose that in the previous iteration we knew a lower bound g such that $d(x, s) \ge g$. Then we can infer a lower bound h for current iteration:
 $$
 d(x, c) \ge max\{0, d(x,s)-d(s,c)\} \ge max\{0, g-d(s,c)\} = h
 $$
-This can be easily proved by lemma 2. So we can assert that:
+This can be easily proved by Lemma 5. So we can assert that:
+
 \begin{claim}
 If center moved a small distance$(d(s,c) is small)$, the lower bound only make a small move.
 \end{claim}
@@ -285,11 +287,11 @@ Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x t
 
 \begin{enumerate}
 \item For all centers c and $c^{\prime}$, compute $d(c, c^{\prime})$. Set $s(c) = \frac{1}{2}min_{c \ne c^{\prime}}d(c,c^{\prime})$.
-\item Identify all points x such that $u(x) \le s(c(x))$. (Refer to claim 8)
-\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$(obviously) and iii) $u(x) > \frac{1}{2}d(c(x), c)(Claim 7)$: 
+\item Identify all points x such that $u(x) \le s(c(x))$. (Refer to Corollary 8)
+\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$(obviously) and iii) $u(x) > \frac{1}{2}d(c(x), c)$(Corollary 7): 
 \begin{enumerate}
 \item If $r(x) = true$, compute $d(x,c(x))$ and assign $r(x)=false$. Otherwise, $d(x,c(x)) = u(x).$ (We don't have to update according to Claim 9)
-\item  If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$, then compute $d(x,c)$ and decide if swap c for x. (Claim 7)
+\item  If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$, then compute $d(x,c)$ and decide if swap c for x. (Corollary 7)
 \end{enumerate}
 \item For each center c, compute centroid, store in m(c).
 \item For each  pair of x and c, set $l(x,c) = max(l(x,c) - d(c,m(c)), 0)$
@@ -299,10 +301,10 @@ Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x t
 \end{enumerate}
 
 Logically, step (2) is redundant because its effect is achieved by condition 3(iii). Computationally, step (2) is benefificial in real experiment because reduce x's size for later steps. And note that u(x) and c(x) may change during the execution of step (3), so we can't discard condition 3(iii).\par
-The most significant part is step (3), we use many strictions to avoid redundant computations. In 3(a) step, we only compute $d(x,c(x))$ for at most one time. Just when in pervious step (7) r(x) is set to True, we update  $d(x,c(x))$, or else we use u(x) to replace. Why step 3's strictions are effcient is that at the start of each iteration, the upper bounds and lower bounds for x are tight enough. If at $j^{th}$ iteration is tight, it'll be tight at $(j+1)^{th}$ iteration, because the location of most centers changes only slightly, and hence the bounds change only slightly. \par
+The most significant part is step (3), we use many restrictions to avoid redundant computations. In 3(a) step, we only compute $d(x,c(x))$ for at most one time. Just when in pervious step (7) r(x) is set to True, we update  $d(x,c(x))$, or else we use u(x) to replace. Why step 3's restrictions are effcient is that at the start of each iteration, the upper bounds and lower bounds for x are tight enough. If at $j^{th}$ iteration is tight, it'll be tight at $(j+1)^{th}$ iteration, because the location of most centers changes only slightly, and hence the bounds change only slightly. \par
 
 \subsubsection{Augmentation analysis}
-Compared to original algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
+Compared to naive K-means++ algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
 
 % opt 2
 \subsection{Relax the restriction}
