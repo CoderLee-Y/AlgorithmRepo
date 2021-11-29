@@ -490,6 +490,30 @@ We can prove this using 3-SAT and Exact Cover by 3-Sets respectively. Existing l
 \section{Application}
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
+	\frametitle{Customer Segmentation}
+	The segmentation of the customers’ base allows operators to better serve customers and target advertising precisely to them.
+The concept of segmentation relies on the high probability of persons grouped into segments based on common demands and behaviours to have a similar response to marketing strategies.
+\par And the concept of segmentation coincides with that of clustering. A company can run K-means analysis base on customers' consumption habits, browsing histories, financial conditions and many other features to precisely partition their customers into different clusters so that they can implement different strategies.
+
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Document Classification}
+	Clustering documents in multiple categories based on tags, topics, and the content of the document is a very standard classification problem and k-means is a highly suitable algorithm for this purpose.
+	\par All we need to do is to pre-processing the documents, representing each of them as a high-dimension vector and using term frequency to identify commonly used terms that help classify the document.
+	The document vectors are then treated as input of K-means algorithm to help identify similarities in document groups.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Optimization of Truck-Drone Delivery Netword}
+	The K-means algorithm is used to optimize truck-drone in tandem delivery network. One of the objectives is to investigate the time, energy, and costs associated to a truck-drone delivery network compared to standalone truck or drone. 
+	\par In 2016, Sergio Ferr{\'a}ndez, Timothy Harbison, Troy Weber, Robert H. Sturges and Robert Rich proposed a method, optimizing the delivery netword of drone powerd by K-means algorithm to find the appropriate launch locations with the  minimum cost.  The optimal solution is determined by finding the minimum cost associated to the parabolic convex cost function.
+	
+\end{frame}
+
+\begin{frame}
 	\frametitle{COVID-19 Dataset}
 A team uses Principal Component Analysis (PCA)  while determining the centroids. With this method to decide on centroids, their method uses much less iterations times and execution time for convergence. Compared with existing K-means++, their algorithm's performance is constant and faster. \par
 Their flowchart of centroids deciding:
@@ -532,8 +556,19 @@ Their flowchart of centroids deciding:
 \section{Conclusion}
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
-	\frametitle{Discussion}
+	\frametitle{Conclusion}
+	Bringing in the K-means algorithm from the beginning, we give the initailization strategy and iteration steps of naive K-keans algorithm.
+	\par Given the proof that the object function decrements in iteration, the objective always converges at a certain point in time. But the drawbacks are annoying and fatal, which may lead to far different results than expected and increase of iterations, so we have some optimization of them, bring us K-means++ and some other way to select initial centroids, avoid redundant computation, select proper magic number $k$ etc.
+	\par K-means are wildly used in many aspects of life, making it easier to do customer-partitioning, clsasifying documents, optimizing resource allocation, pattern recognizing in images and so many other application in industry and daily life.
+\end{frame}
 
+\begin{frame}
+	\frametitle{Conclusion}
+	Finally, we would like to give out some open questions we have about K-means for further research.
+	\begin{itemize}
+	\item \textbf{Lower bound of calculations:} Whether one can find a lower bound on how many distance calculations are needed by any implementation of exact K-means? With a theoretical lower bound, we can futher speed up the algorithm.
+	\item \textbf{Use running time information to find K:} We found all papers don't take full advantage of information from running time. Can we fine tune the value of K during running the algorithm?
+	\end{itemize}
 \end{frame}
 
 
