@@ -215,8 +215,23 @@
 
 \begin{frame}
 	\frametitle{Drawback of K-means}
+	In the caes of initializing $k$ centroids using naive K-means algorithm (usually Lloyd's algorithm), we use \ccp{randomization}.
+  The initial $k$ centroid are picked in the range of data set randomly. 
+	\par However, this initialization strategy could result in initialization sensitivity. The final formed clusters could be affected greatly by the initial picked centroids.	
 
-	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Drawback of K-means}
+	An instance of good clustering result:
+	\centerline{\includegraphics[width=0.7\textwidth]{figures/fig2.png}}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Drawback of K-means}
+	An instance of poor clustering result:
+	\centerline{\includegraphics[width=0.7\textwidth]{figures/fig.png}}
 
 \end{frame}
 
