@@ -126,7 +126,7 @@ $$Cost(C_{1:k}, c_{1:k}) = \sum_{i=1}^{k} \sum_{x \in C_i } {\left\lVert x - c _
 \subsection{The K-means algorithm}
 \subsubsection{Algorithm Details}
 The k-means algorithm is a simple and fast algorithm for this problem, although it offers no approximation guarantees at all.
-It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.\cite{k-means}
+It iteratively calculates the sum of distance within a cluster and updates the partition.The details are as follows.
 \begin{enumerate}
   \item Arbitrarily choose and initial $k$ centroids $\mathcal{C} = \{c_1, c_2 \dots c_k\}$
   \item For each $i \in \{1, 2 \dots k\}$, set the cluster $C_i$ to be the set of points that are closer to $c_i$ than they are to $c_j$ for all $j \neq i$
@@ -279,7 +279,7 @@ optimal results on the synthetic datasets.\cite{kmeanspp}
   \par And the whole process takes $k$ iterations in total so the time complexity of K-means++'s initialization is $O(kn)$.
 \end{proof}
 
-% opt 3
+% opt 2
 \subsection{Avoid redundant computation}
 In both K-means and K-means$++$ algorithm, if there are $n$ data points in $\mathbb{R}^ d$ space and $k$ clusters for partition, each iteration involves $n * k$ distance computations, which would significantly slow down algorithm. Based on the observation of  unnecessary calculation in the process of iteration, Charles Elkan put forward a strict method to avoid unnecessary computation.\cite{articleToBound} The key idea is to bound on data point to cluster centroid distance and use triangle inequality to avoid redundant computations of distance between data points and cluster centroids.
 
@@ -314,21 +314,21 @@ Use triangle inequality $d(x,c) \ge d(x,b)-d(b,c)$, with $d(x,c) \ge 0$, we can 
 
 Let $x$ be any data point, let $c$ be the center to which is currently assigned, let s become any other center. So with the lemma, we can assert that:
 \begin{corollary}
-if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we don't need to compute $d(x,s)$. (Proved by Lemma 4)
+if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we don't need to compute $d(x,s)$. (Proved by Lemma 6)
 \end{corollary}
 
 \begin{corollary}
-Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .(Proved by Corollary 6)
+Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .(Proved by Corollary 8)
 \end{corollary}
 \begin{corollary}
-Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided. (Proved by Corollary 7)
+Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided. (Proved by Corollary 9)
 \end{corollary}
 
 Next, Let $x$ be any data point, let $c$ be any center, let s become previous version of same center. Suppose that in the previous iteration we knew a lower bound g such that $d(x, s) \ge g$. Then we can infer a lower bound h for current iteration:
 $$
 d(x, c) \ge max\{0, d(x,s)-d(s,c)\} \ge max\{0, g-d(s,c)\} = h
 $$
-This can be easily proved by Lemma 5. So we can assert that:
+This can be easily proved by Lemma 7. So we can assert that:
 
 \begin{claim}
 If center moved a small distance$(d(s,c) is small)$, the lower bound only make a small move.
@@ -340,11 +340,11 @@ Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x t
 
 \begin{enumerate}
 \item For all centers c and $c^{\prime}$, compute $d(c, c^{\prime})$. Set $s(c) = \frac{1}{2}min_{c \ne c^{\prime}}d(c,c^{\prime})$.
-\item Identify all points x such that $u(x) \le s(c(x))$. (Refer to Corollary 8)
-\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$(obviously) and iii) $u(x) > \frac{1}{2}d(c(x), c)$(Corollary 7): 
+\item Identify all points x such that $u(x) \le s(c(x))$. (Refer to Corollary 10)
+\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$(obviously) and iii) $u(x) > \frac{1}{2}d(c(x), c)$(Corollary 9): 
 \begin{enumerate}
-\item If $r(x) = true$, compute $d(x,c(x))$ and assign $r(x)=false$. Otherwise, $d(x,c(x)) = u(x).$ (We don't have to update according to Claim 9)
-\item  If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$, then compute $d(x,c)$ and decide if swap c for x. (Corollary 7)
+\item If $r(x) = true$, compute $d(x,c(x))$ and assign $r(x)=false$. Otherwise, $d(x,c(x)) = u(x).$ (We don't have to update according to Claim 11)
+\item  If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$, then compute $d(x,c)$ and decide if swap c for x. (Corollary 9)
 \end{enumerate}
 \item For each center c, compute centroid, store in m(c).
 \item For each  pair of x and c, set $l(x,c) = max(l(x,c) - d(c,m(c)), 0)$
@@ -359,9 +359,10 @@ The most significant part is step (3), we use many restrictions to avoid redunda
 \subsubsection{Augmentation analysis}
 Compared to naive K-means++ algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
 
-% opt 2
+% opt 3
 \subsection{Relax the restriction}
-In fact, the previous augmentation makes no trade-off between loss function and running time. The algorithm is designed under strict limitation. Still based on the same observation, the team of Siddhesh Khandelwal\cite{Faster} make contributions to help reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. We'll show how this heuristic works in detail.
+In fact, the previous augmentation is designed under strict limitations. Still based on the same observation, the team of Siddhesh Khandelwal\cite{Faster} makes contributions to help reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. This augmentation makes trade-off between loss function and running tim and relaxes the previous algorithm's restrictions. We'll show how this heuristic works in detail.
+
 \subsubsection{Inspiration}
 The optimization is based on the observation that across all iterations of K-means or K-means$++$, a data point changes its membership only among a small subset of clusters. The heuristic considers only a subset of \textbf{nearby cluster as candidates} for deciding membership for a data point. This heuristic has advantage of speeding up K-means and K-means$++$ clustering with marginal increase in loss functuion(MSE in our case). Note that the optimization can be applied in any algorithm to solve K-means problem with steps to caculate distance between points and centers, acting as augmentation.
 \subsubsection{Augmentation target}
@@ -370,6 +371,7 @@ Let $A$ be any variant algorithm of K-means problem and $B$ be the same variant 
 \item \textbf{For convergence time:} $T^{\prime} < T$
 \item \textbf{For loss:} $E^{\prime} \le E \space $ or $ \space E^{\prime} \overset{marginally}{>} E$
 \end{itemize}
+Note that the augmentation has no request of providing same results with naive K-means algorithm.
 
 \subsubsection{Augmentation detail}
 \par We assume that $k^{\prime}$ is significantly smaller than $k$. We will show how to choose $k^{\prime}$ later.We build candidate cluster list (CCL) based on top $k^{\prime}$ nearest clusters to the data point after first iteration of K-means. \par
@@ -386,19 +388,22 @@ Overhead analysis:
 \item \textbf{Computation overhead:} $O(nklog(k))$ for creating CCL at first. We have to compute the distance to each cluster's centroid for each point and sort them to create CCL. 
 \item \textbf{Memory overhead:}$ O(nk^{\prime})$ to maintain CCL.
 \end{itemize}
+
 \par
+Working in the same 6 typical datasets, augmenting triangle inequality K-means(introduced in section 3.4) with this heuristic \textbf{speeds up from $ 1.5 \times$ to $  3.1 \times$ compared with not augmenting this heuristic.}
 
 % Opt 4
 \subsection{Choose a proper K}
-How to evaluate goodness of clustering for various potential values of number of clusters? We will introduce several common methods.\cite{datamining,inproceedings,articleToBound,doi:10.1243/095440605X8298} Let's review our optimization. We speed up the algorithm with either lenient or strict conditions and seed the initial K center properly. But still exists the only hyper-parameter we don't know how to tune. So let's begin. \par
+How to evaluate goodness of clustering for various potential values of number of clusters? We will introduce several common methods.\cite{datamining,inproceedings,articleToBound,doi:10.1243/095440605X8298} Let's review our optimization. We speed up the algorithm with either lenient or strict conditions and seed the initial K centers properly. But still exists the only hyper-parameter K we don't know how to tune. So let's begin. \par
 
 
 \subsubsection{Use a range of set}
-We choose a set of K and compare their performance. In this set, we need to choose k significantly smaller than the number of objects in the data sets and let it be resonably large.
+We choose a set of K and compare their performance. In this set, we need to choose k significantly smaller than the number of objects in the data sets and let it be resonably large based on this.
 
 \subsubsection{statistical measures}
 There are several statistical measures available for selecting K. These measures are often applied in combination with probabilistic clustering approaches.
-They are calculated with certain assumptions about the underlying distribution of the data. The Bayesian information criterion is calculated on data sets which are constructed by a set of \textbf{Gaussian distributions}. Monte Carlo techniques, which are associated with the null hypothesis, are used for assessing the clustering results and also for determining the number of clusters.
+They are calculated with certain assumptions about the underlying distribution of the data. \par
+e.g. The Bayesian information criterion is calculated on data sets which are constructed by a set of \textbf{Gaussian distributions}. Monte Carlo techniques, which are associated with the null hypothesis, are used for assessing the clustering results and also for determining the number of clusters.
 
 \subsubsection{visualization}
 Visual verification is applied widely because of its simplicity and explanation possibilities. In my own practice, I usually use PCA or other methods to draw points on a planar graph to check how many clusters exist in Machine Learning course's project. But it has many restrictions. e.g. The application of
@@ -409,7 +414,9 @@ When K-means clustering is used as a pre-processing tool, the number of clusters
 
 \section{Key properties}
 \subsection{K-means problem is NP Complete}
-K-means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness}  For lack of space, we won't describe their proof in detail. For reduction from planar 3-SAT to k-means, the author corresponds a simple circuit to each variable $x_i$ in 3-SAT. And each circuit has an even number of vertices marked on it. Circuits are partitioned into pairs of adjacent vertices according to the value of $x_i$. Then, each edge becomes a representation of value. The authors set the distance between vertices and uniquely determine a layout that gives a correct reduction from planar 3-SAT to planar k-means. Then we can use K-means to solve 3-SAT. That is, K-means problem is NP-Complete problem.
+K-means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness}  For lack of space, we won't describe their proof in detail. For reduction from planar 3-SAT to k-means, the author corresponds a simple circuit to each variable $x_i$ in 3-SAT. And each circuit has an even number of vertices marked on it. Circuits are partitioned into pairs of adjacent vertices according to the value of $x_i$. Then, each edge becomes a representation of value. The authors set the distance between vertices and uniquely determine a layout that gives a correct reduction from planar 3-SAT to planar k-means. We spent much time on this paper but still couldn't illustrate it clearly. Please refer to origin paper. \par
+But anyway we can use K-means to solve 3-SAT. That is, K-means problem is NP-Complete problem. Existing local search algorithms that computes a certain local (and not necessarily global) optimum for this problem are what we really feel interested in. In fact, Lloyd’s algorithm and its variants never  provide any significant guarantee about how well the solution that it computes approximates the optimal solution, but just "reasonable approximation guarantees".
+
 \subsection{Algorithm complexity analysis}
 Please check our section 3 and every algorithm's complexity is analyzed soon after we give out its details.
 
@@ -443,237 +450,6 @@ But to be honest, we have to argue that their research just used K-means to gene
 Bringing in the K-means algorithm from the beginning, we give the initailization strategy and iteration steps of naive K-keans algorithm.
 Given the proof that the object function decrements in iteration, the objective always converges at a certain point in time. But the drawbacks are annoying and fatal, which may lead to far different results than expected and increase of iterations, so we have some optimization of them, bring us K-means++ and some other way to select initial centroids, avoid redundant computation, select proper magic number $k$ etc.
 K-means are wildly used in many aspects of life, making it easier to do customer-partitioning, clsasifying documents, optimizing resource allocation, pattern recognizing in images and so many other application in industry and daily life.
-
-\section{Median Trick}
-So far, we have an algorithm $A$ which estimates in correct range of $\eps$ with probability $\ge 0.9$. Our new algorithm $A^{\ast}$ will output in range of $\eps$ with probability $1-\delta$.
-Algorithm:
-\begin{itemize}
-\item Repeat $A$ for $m=O(log (1/\delta))$ times
-\item Take median of all the $m$ answers.
-\end{itemize}
-
-To prove the correctness, we'll use Chernoff/Hoeffding bounds.
-
-\begin{definition}
-[Chernoff/Hoeffding Bound]
-Let $X_{1}$, $X_{2}$, $\ldots$, $X_{m}$ be independent random variables $\in \{0,1\}$,
-$\mu = E[\Sigma_{i} X_{i}], \eps \in [0,1]$.
-Then $Pr[|\Sigma_{i} X_{i}-\mu| > \eps\mu] \leq 2e^{-\eps^{2}\mu/3}$
-\end{definition}
-
-Define $X_{i} = 1$ iff the $i^{th}$ answer of $A$ is correct (i.e. estimated value of $A$ lies in correct range).
-
-\begin{claim}
-$E[X_{i}] = 0.9$, and $E[\mu] = 0.9m$
-\end{claim}
-
-\begin{proof}
-Since A is correct with probability 0.9, $E[X_{i}] = 0.9$. And $E[\mu] = 0.9m$ due to linearity of expectation.
-\end{proof}
-
-\begin{claim}
-New algorithm $A^{\ast}$ is correct when $\Sigma_{i} X_{i} > 0.5m$
-\end{claim}
-
-\begin{proof}
-Since we are considering median value to be our answer, if more than half the trials of A are correct, algorithm $A^{\ast}$ is also correct.
-\end{proof}
-
-\begin{claim}
-To prove, $Pr[\Sigma_{i} X_{i} \ge 0.5m] \ge 1-\delta$ or $Pr[\Sigma_{i} X_{i} < 0.5m] < \delta$
-\end{claim}
-
-\begin{proof}
-\begin{equation}
-\begin{split}
-Pr[\Sigma_{i} X_{i} < 0.5m] & = Pr[\Sigma_{i} X_{i} - 0.9m < -0.4m]\\
-& \le Pr[|\Sigma_{i} X_{i} - \mu| > 0.4m]\\
-& = Pr[|\Sigma X_{i} - \mu| > 0.4/0.9 \mu]
-\end{split}
-\end{equation}
-Using Chernoff bound,
-\begin{equation}
-\begin{split}
-& \leq e^{-c*0.9m}\\
-& < \delta
-\end{split}
-\end{equation}
-Above equation holds for $m = O(log(1/\delta))$
-\end{proof}
-
-\section{Distinct Elements}
-Given, a stream of size $m$ containing numbers from $[n]$, we have to approximate the number of elements with non-zero frequency. To calculate the exact value the space required:
-
-\begin{itemize}
-\item $O(n)$ bits. (maintain a vector of length n).
-\item $O(m \log (n))$ bits. (save m numbers, each taking $log(n)$ bits).
-\end{itemize}
-
-Since, this complexity is not feasible as $m$,$n$ can be very large, we'll look at algorithm for approximating the distinct count value.
-
-\subsubsection{Hash Function}
-\begin{itemize}
-\item $h : [n] \rightarrow [0,1]$
-\item $h(i)$ is uniformly distributed in $[0,1]$.
-\end{itemize}
-
-\subsection{Algorithm [Flajolet-Martin 1985]}
-We maintain a variable $z$.
-\begin{enumerate}
-\item Initialize $z = 1$.
-\item Whenever $i$ is encountered: $z = \min{(z,h(i))}$
-\item When done, output $1/z -1$.
-\end{enumerate}
-
-Now, we'll prove the algorithm works in a similar fashion followed in previous lecture.
-Let $d$ be number of distinct elements.
-
-\begin{claim}
-$E[z] = d+1$
-\end{claim}
-
-\begin{proof}
-$z$ is the minimum of $d$ random numbers in $[0,1]$. Pick another random number $a \in [0,1]$. The probability $a<z$:
-\begin{enumerate}
-\item exactly z
-\item probability it's smallest among $d+1$ reals : $1/(d+1)$
-\end{enumerate}
-Equating these two, one can prove the claim.
-\end{proof}
-
-\begin{claim}
-$\text{var}[z] \leq 2/d^{2}$
-\end{claim}
-
-\begin{proof}
-It can be done in a similar fashion described in previous lecture.
-\end{proof}
-
-\subsubsection{$(1+\eps)$ approximation Algorithm }
-We can take $Z = (z_{1} + z_{2} + ... z_{k})/k$ for independent $z_{1}, ... z_{k}$
-
-\subsection{Alternate Algorithm: Bottom-k}
-Instead of just use the minimum value of hash function for $i$ inputs, we'll maintain the $k$ smallest hashes seen.
-\begin{enumerate}
-\item Initialize $(z_{1}, z_{2},...z_{k}) = 1$.
-\item Keep $k$ smallest hashes seen, s.t. $z_{1}\leq z_{2}\leq...z_{k}$
-\item When done, output $\hat{d} = k/z_{k}$
-\end{enumerate}
-
-\begin{claim}
-The following claims are stated:
-\begin{itemize}
-\item $Pr[\hat{d} > (1 + \eps)d] \leq 0.05$
-\item $Pr[\hat{d} < (1 - \eps)d] \leq 0.05$
-\item Overall probability that $\hat{d}$ outside range is at most 0.1
-\end{itemize}
-\end{claim}
-
-\begin{proof}
-To compute $Pr[\hat{d} > (1+\eps)d]$:
-\begin{itemize}
-\item Define $X_{i} = 1$ iff $h(i) < \dfrac{k}{(1+\eps)d}$
-\item Then $\hat{d} > (1+\eps)d$ iff $\Sigma_{i} X_{i} > k$
-\item if $\Sigma_{i} X_{i} > k$\\
-  $\iff \exists$ at least $k$ numbers for which $h(i) < \dfrac{k}{(1+\eps)d}$\\
-    \begin{equation}
-      \iff z_{k} < \dfrac{k}{(1+\eps)d}
-      \iff \dfrac{k}{z_{k}} > (1+\eps)d
-      \iff \hat{d} > (1+\eps)d
-    \end{equation}
-\item
-  $E[X_{i}] = \dfrac{k}{(1+\eps)d}$\\
-  $E[\Sigma_{i} X_{i}] = d E[X_{i}] = \dfrac{k}{1 + \eps}$\\
-  $\text{var}[\Sigma_{i} X_{i}] = d \text{var}[X_{i}] \leq dE[X_{1}^{2}] \leq  \dfrac{k}{1+\eps} \leq k$\\
-  (Since $X_{1} \in \{0,1\}$, $E[X_{1}^{2}] = E[X_{i}]$)
-\item By Chebyshev:
-    $Pr[|\Sigma X_{i} - \dfrac{k}{1+\eps}| > \sqrt{20k}] \leq 0.05 \implies Pr[\Sigma X_{i} > \dfrac{k}{1+\eps} + \sqrt{20k}] \leq 0.05 $\\
-    \begin{itemize}
-    \item
-      (For $\eps < 1/2$ and $k=c/\eps^{2}$)\\
-      $\dfrac{k}{1+\eps} + \sqrt{20k} \leq k(1-\eps+\eps^{2}) + \sqrt{20k}$ (Taylor Series Expansion)\\
-      $ \leq k - k\eps/2 + 5\sqrt{c}/\eps$
-      $ = k - c / 2\eps + 5\sqrt{c}/\eps$\\
-      $ < k $ where $c > 100$
-    \item
-      Since $k > \dfrac{k}{1+\eps} + \sqrt{20k} $ in our case and $\Sigma X_{i}$ is monotonically increasing, $Pr[\Sigma X_{i} > k] \leq Pr[\Sigma X_{i} > \dfrac{k}{1+\eps} + \sqrt{20k}] \leq 0.05$
-
-    \end{itemize}
-\end{itemize}
-\end{proof}
-
-\subsection{Hash functions in stream}
-The hash function we used has two practical issues: (1) the return value should be a real number. (2) how do we store it?
-
-Discretization can solve the first issue. Instead of all the real numbers in $[0, 1]$, we use hash function with range $\{0, \frac{1}{M}, \frac{2}{M}, \frac{3}{M}, \ldots, 1\}$. For large $M \gg n^{3}$, the probability that $d \le n$ random numbers collide is at most $\frac{1}{n}$.
-
-For the second issue, we use pairwise independent function instead of independent function.
-
-\begin{definition}
-$h: [n] \rightarrow \{1, 2, \ldots M\}$ is pairwise independent if for all $i \ne j$ and $a, b \in [M]$, $\text{Pr}[h(i)=a \land h(j)=b]=\frac{1}{M^2}$
-\end{definition}
-
-It works because in previous calculation, we only care about pairs. We defined $X_i=1$ iff $h(i)$ is small than a threshold, then we computed $\text{var}[\Sigma X_i] = E[(\Sigma X_i)^2] - E[(\Sigma X_i)^2] = E[X_1X_1 + X_1X_2 + \ldots]- E[(\Sigma X_i)^2]$. Notice that $E[X_iX_j]$ is the same for fully random $h$ and pairwise independent $h$.
-
-\begin{example}
-[Construct a pairwise independent hash]
-Assume $M$ is a prime number (if not, we can always pick a larger $M$ that is a prime number). We pick $p, q \in \{0, 1, 2, \ldots M-1 \}$ and the hash function $h(i) = pi+q \mod M$. In this construction we only need $O(\log M) = O(\log n)$ space (to store $p, q, M$).
-\end{example}
-
-\begin{proof}
-$h(i)=a, h(j)=b$ is equivalent to $pi+q \equiv a, pj+q \equiv b$. So $p(i-j) \equiv a-b$ and $p \equiv (a-b)(i-j)^{-1}, q \equiv a - pi$. Since $M$ is a prime number, the unique inverse implies that there is only one pair $(p, q)$ satisfies it. And the probability that pair is chosen is exactly $\frac{1}{M^2}$.
-\end{proof}
-
-\section{Impossibility Results}
-
-We have used both approximation and randomization to solve the distinct counting problem with space much less than $\min{(m, n)}$. Now we are wondering: can we omit either approximation or randomization to achieve the same space efficiency? The answer is no.
-
-\subsection{Deterministic Exact Won't Work}
-
-First, we will show that there is no deterministic (no randomization) and exact (no approximation) way to solve it.
-
-Suppose there do exists a deterministic and exact algorithm $A$ and an estimator function $R$ that use space $s \ll n, m$. That is, for a given integer stream, we first run the algorithm $A$ on the stream. As the stream goes $A$ will return middle memory steps, and we obtain the final memory state $\sigma$ after the stream ends. Then we apply $R$ on $\sigma$ to obtain our estimator $\hat{d}$. Since both $A$ and $R$ are deterministic and exact, $\hat{d}$ must equals to the distinct count for the stream.
-
-We now build a binary representation $x$ of the stream with the following rules: (1) $x \in \{0, 1\}^{n}$, (2) $i$ in stream iff $x_i = 1$. For example, if 1, 3, 5, 6, 7 are in the stream and 2, 4 are not, $x$ will start with 1, 0, 1, 0, 1, 1, 1. Notice that each stream has a corresponding representation and streams containing different numbers have different representations.
-
-\begin{claim}
-We can recover the $x$ of the stream given the memory state $\sigma$
-\end{claim}
-
-\begin{proof}
-Denote $d=R(\sigma)$ be the original estimator. Now we treat $\sigma$ as a middle snapshot of the memory and add integer $i$ as the next element of the stream. Now $A$ will return another memory state $\sigma'$, and $d'=R(\sigma)'$ will be our new estimator. If $d'=d$, $i$ must have appeared in the stream before since $A$ and $R$ are deterministic and exact. Similarly, if $d'>d$, $i$ must have not appeared in the stream before. Using this method with $i=1, 2, 3\ldots$ and we can recover the $x$.
-\end{proof}
-
-Since we can recover $x$ from $\sigma$, we can treat $\sigma$ as an encoding of a string $x$ of length $n$. But $\sigma$ has only $s \ll n$ bits! Furthermore, we can treat $A$, the function that produces $\sigma$, as a function with domain $\{0, 1\}^{n}$ and $\{0, 1\}^{s}$. We can see that $A$ must be injective because if $A(x)=A(x')=\sigma$, the recoverability implies $x=x'$.
-
-Hence $s \ge n$. Which implies that there is no deterministic and exact algorithm $A$ and an estimator function $R$ that use space $s \ll n, m$.
-
-\subsection{Deterministic Approx. Won't Either}
-
-We can use the similar strategy to prove that deterministic approx. won't work. We pick $T \subset \{0, 1\}^{n}$ that satisfies the following conditions: (1) for all distinct $x, y \in T$, the number of digits $i$ that $y_i=1$ and $x_i=0$ should $\ge \frac{n}{6}$. (2) $|T| \ge 2^{\Omega(n)}$. Now we use algorithm $A$ to encode an input $x$ into $\sigma=A(x)$ and our estimator would be $\hat{d}=R(\sigma)$.
-
-Now we want to recover $x$ based on $\sigma$, as what we have done in the last section. For a given $\sigma$ and any $y \in T$, we append $y$ to the stream and apply $A$ on it, and $A$ will return a memory state $\sigma'$. Using $\sigma'$ we have new estimator $\hat{d'}=R(\sigma')$.
-
-\begin{claim}
-If $\hat{d'} > 1.01 \hat{d}$, then $x \ne y$, else $x=y$.
-\end{claim}
-
-\begin{proof}
-The idea is that when $x=y$, $\hat{d}$ would be really close to $\hat{d'}$ (up to $(1+\epsilon)^{2}$ because both of them are $\epsilon$-approximated) and when $x \ne y$, the construction of $T$ guarantee that $\hat{d} \ge \hat{d} + \frac{n}{6}$. So we can pick an $\epsilon$ that works for our claim.
-\end{proof}
-
-We can use this method to check every element $y \in T$ to see if $y=x$, and eventually we can recover $x$ from it. Similar to last section, we can show that $A$ is an injective function and it implies that $2^{s} \ge |T|$ or $s = \Omega(n)$.
-
-\section{Concluding Remarks}
-
-\begin{itemize}
-
-\item We can use median trick and Chernoff bound to improve the probability of an existing algorithm.
-
-\item For distinct elements problem, we can also store the hashes $h(i)$ approximately. One example is to store the number of leading zeros, and it only cost $O(\log \log n)$ bits per hash value, and that is the idea behind another algorithm called HyperLogLog.
-
-\item For the impossibility results, we can also prove that randomized exact algorithm won't work.
-\end{itemize}
 
 \bibliographystyle{IEEEtran}
 \bibliography{ref.bib}
