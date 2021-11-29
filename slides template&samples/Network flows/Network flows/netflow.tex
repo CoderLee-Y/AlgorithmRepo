@@ -216,7 +216,7 @@
 \begin{frame}
 	\frametitle{Drawback of K-means}
 
-	
+
 
 \end{frame}
 
@@ -229,7 +229,7 @@
 	There exist many unnecessary calculations in the process of iteration! \par
 	\pause
 	\par If a point is \ccp{far away from a centroid}, it is not necessary to calculate the exact distance between the point and the centroid in order to know that the point should not be assigned to this centroid.\par
- Conversely, \ccp{if a point is much closer to one center than to any other}, calculating exact distances is not necessary to know that the point should be assigned to the first center. 
+	Conversely, \ccp{if a point is much closer to one center than to any other}, calculating exact distances is not necessary to know that the point should be assigned to the first center.
 
 
 \end{frame}
@@ -239,39 +239,39 @@
 	\frametitle{Avoid redundant computation}
 	The key idea is to \ccp{bound on data point} to cluster centroid distance and use \ccp{triangle inequality} to avoid redundant computations of distance between data points and cluster centroids.
 	\begin{lemma}
-	Triangle inequality: For any 3 points $x, y, z$, $d(x,z) \le d(x, y) + d(y, z)$.
-	\end{lemma} 
-The only black box property of any distance metrics.
+		Triangle inequality: For any 3 points $x, y, z$, $d(x,z) \le d(x, y) + d(y, z)$.
+	\end{lemma}
+	The only black box property of any distance metrics.
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Avoid redundant computation}
 	\begin{lemma}
-Let x be a point and let b and c be centers. If $d(b, c) \ge 2d(x,b)$ then $d(x,c) \ge d(x,b)$.
-\end{lemma}
-\begin{proof}
-Use triangle inequality, $d(b,c) - d(x,b)\le d(x,c)$. And bring in $d(b, c) \ge 2d(x,b)$, we can get the conclusion.
-\end{proof}
-\pause
-\begin{lemma}
-Let x be a point and let b and c be centers. $d(x,c) \ge max(0, d(x,b)-d(b,c))$.
-\end{lemma}
-\begin{proof}
-Use triangle inequality $d(x,c) \ge d(x,b)-d(b,c)$, with $d(x,c) \ge 0$, we can get the conclusion.
-\end{proof}
+		Let x be a point and let b and c be centers. If $d(b, c) \ge 2d(x,b)$ then $d(x,c) \ge d(x,b)$.
+	\end{lemma}
+	\begin{proof}
+		Use triangle inequality, $d(b,c) - d(x,b)\le d(x,c)$. And bring in $d(b, c) \ge 2d(x,b)$, we can get the conclusion.
+	\end{proof}
+	\pause
+	\begin{lemma}
+		Let x be a point and let b and c be centers. $d(x,c) \ge max(0, d(x,b)-d(b,c))$.
+	\end{lemma}
+	\begin{proof}
+		Use triangle inequality $d(x,c) \ge d(x,b)-d(b,c)$, with $d(x,c) \ge 0$, we can get the conclusion.
+	\end{proof}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
-\frametitle{Avoid redundant computation}
+	\frametitle{Avoid redundant computation}
 	\begin{corollary}
-if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we \ccp{don't need to compute $d(x,s)$.} 
-\end{corollary}
-\pause
-\begin{corollary}
-Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, \ccp{we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .}
-\end{corollary}
+		if $\frac{1}{2}d(c, s) \ge d(x,c)$ then $d(x, s) \ge d(x, c)$, and we \ccp{don't need to compute $d(x,s)$.}
+	\end{corollary}
+	\pause
+	\begin{corollary}
+		Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u such that $u \ge d(x,c)$: For any other possible choice, \ccp{we only need to compute $d(x, c), d(x, s)$ iff $u > \frac{1}{2}d(c, s)$ .}
+	\end{corollary}
 
 \end{frame}
 
@@ -279,21 +279,21 @@ Suppose that we don't know $d(x,c)$ exactly, and we do know an upper bound u suc
 \begin{frame}
 	\frametitle{Avoid redundant computation}
 	\begin{corollary}
-Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided. 
-\end{corollary}
+		Suppose that $u \le \frac{1}{2}d(c, s)$ for any possible s, all distance calculations for x can be avoided.
+	\end{corollary}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
-\frametitle{Avoid redundant computation}
-Let $x$ be any data point, let $c$ be any center, let s become previous version of same center. Suppose that in the previous iteration we knew a lower bound g such that $d(x, s) \ge g$ Then we can infer a lower bound h for current iteration: \par
-\begin{equation*}	
-	d(x, c) \ge max\{0, d(x,s)-d(s,c)\} \ge max\{0, g-d(s,c)\} = h
+	\frametitle{Avoid redundant computation}
+	Let $x$ be any data point, let $c$ be any center, let s become previous version of same center. Suppose that in the previous iteration we knew a lower bound g such that $d(x, s) \ge g$ Then we can infer a lower bound h for current iteration: \par
+	\begin{equation*}
+		d(x, c) \ge max\{0, d(x,s)-d(s,c)\} \ge max\{0, g-d(s,c)\} = h
 	\end{equation*}
-\pause
-\begin{claim}
-\ccp{If center moved a small distance$(d(s,c)$ is small}, the lower bound only make a small move.
-\end{claim}
+	\pause
+	\begin{claim}
+		\ccp{If center moved a small distance$(d(s,c)$ is small}, the lower bound only make a small move.
+	\end{claim}
 \end{frame}
 
 
@@ -301,17 +301,17 @@ Let $x$ be any data point, let $c$ be any center, let s become previous version 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Augmentation detail}
- We use $u(x)$ to represent upper bound of distance between a given point $x$ and its currently assigned center $c$. $l(x,c^{\prime})$ is the lower bound on the distance between x and some other center $c^{\prime}$.\par
-\begin{claim}
-If $u(x) \le l(x,c^{\prime}) $, we don't need to calculate $d(x,c), d(x, c^{\prime})$. \par
-\end{claim}
+	We use $u(x)$ to represent upper bound of distance between a given point $x$ and its currently assigned center $c$. $l(x,c^{\prime})$ is the lower bound on the distance between x and some other center $c^{\prime}$.\par
+	\begin{claim}
+		If $u(x) \le l(x,c^{\prime}) $, we don't need to calculate $d(x,c), d(x, c^{\prime})$. \par
+	\end{claim}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Augmentation preparation}
- Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x to its closest initial center.\par
-Each time $d(x,c)$ is computed, set $l(x,c)=d(x,c)$. At last, set upper bounds $u(x) = min_c(d(x,c))$.
+	Initially, we set $l(x,c)=0$ for each point x and center c. Then assign each x to its closest initial center.\par
+	Each time $d(x,c)$ is computed, set $l(x,c)=d(x,c)$. At last, set upper bounds $u(x) = min_c(d(x,c))$.
 
 \end{frame}
 
@@ -319,76 +319,76 @@ Each time $d(x,c)$ is computed, set $l(x,c)=d(x,c)$. At last, set upper bounds $
 \begin{frame}
 	\frametitle{Augmentation detail}
 
-Then repeate this until convergence.
-\begin{enumerate}
-\item For all centers c and $c^{\prime}$, compute $d(c, c^{\prime})$. Set $s(c) = \frac{1}{2}min_{c \ne c^{\prime}}d(c,c^{\prime})$.
-\item \ccp{Identify all points x such that $u(x) \le s(c(x))$. }
-\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$ and \ccp{iii) $u(x) > \frac{1}{2}d(c(x), c)$}: 
-\begin{enumerate}
-\item If $r(x) = true$, compute $d(x,c(x))$ and assign $r(x)=false$. \ccp{Otherwise, $d(x,c(x)) = u(x).$ }
-\item \ccp{If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$}, then compute $d(x,c)$ and decide if swap c for x. 
-\end{enumerate}
+	Then repeate this until convergence.
+	\begin{enumerate}
+		\item For all centers c and $c^{\prime}$, compute $d(c, c^{\prime})$. Set $s(c) = \frac{1}{2}min_{c \ne c^{\prime}}d(c,c^{\prime})$.
+		\item \ccp{Identify all points x such that $u(x) \le s(c(x))$. }
+		\item For each pair of remaining x and c, which satisfy: i) $c \ne c(x)$ and ii) $u(x) > l(x,c)$ and \ccp{iii) $u(x) > \frac{1}{2}d(c(x), c)$}:
+		      \begin{enumerate}
+			      \item If $r(x) = true$, compute $d(x,c(x))$ and assign $r(x)=false$. \ccp{Otherwise, $d(x,c(x)) = u(x).$ }
+			      \item \ccp{If $d(x,c(x))> l(x,c)$ or $d(x,c(x)) > \frac{1}{2}d(c(x), c)$}, then compute $d(x,c)$ and decide if swap c for x.
+		      \end{enumerate}
 
-\end{enumerate}
+	\end{enumerate}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Augmentation detail}
-\begin{enumerate}
-\setcounter{enumi}{3} 
-\item For each center c, compute centroid, store in m(c).
-\item For each  pair of x and c, set $l(x,c) = max(l(x,c) - d(c,m(c)), 0)$
-\item For each point x, set $u(x) = u(x) + d(m(c(x)), c(x))$
-\item For each point x, set $r(x) = True$
-\item Really replace c by m(c)
-\end{enumerate}
+	\begin{enumerate}
+		\setcounter{enumi}{3}
+		\item For each center c, compute centroid, store in m(c).
+		\item For each  pair of x and c, set $l(x,c) = max(l(x,c) - d(c,m(c)), 0)$
+		\item For each point x, set $u(x) = u(x) + d(m(c(x)), c(x))$
+		\item For each point x, set $r(x) = True$
+		\item Really replace c by m(c)
+	\end{enumerate}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Discussion}
-Compared to naive K-means++ algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
+	Compared to naive K-means++ algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Relax the restriction}
-Another contribution helps reduce the iteration cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating \ccp{candidate cluster list (CCL)} of size $k^{\prime}$ for each data point. \par
-This augmentation makes trade-off between loss function and running time and relaxes the previous algorithm's restrictions.Their target:
-\begin{itemize}
-\item \textbf{For convergence time:} $T^{\prime} < T$
-\item \textbf{For loss:} $E^{\prime} \le E \space $ or $ \space E^{\prime} \overset{marginally}{>} E$
-\end{itemize}
+	Another contribution helps reduce the iteration cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating \ccp{candidate cluster list (CCL)} of size $k^{\prime}$ for each data point. \par
+	This augmentation makes trade-off between loss function and running time and relaxes the previous algorithm's restrictions.Their target:
+	\begin{itemize}
+		\item \textbf{For convergence time:} $T^{\prime} < T$
+		\item \textbf{For loss:} $E^{\prime} \le E \space $ or $ \space E^{\prime} \overset{marginally}{>} E$
+	\end{itemize}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{How it works}
-Consider a data point p1 and cluster centroids represented as $c_1$, $c_2$..., $c_k$. We assume that $k^{\prime} << k $ and there is a candidate cluster list for $p_1$.\par
-\pause
- If we run K-means for second iteration, $p_1$ will compute distance to all k centroids. After second iteration, there are two possible cases:
-\begin{enumerate}
-\item The list do not change but only members'ranking changes.
-\item Several members of the centroids in the previous list are replaced with other centroids which were not in the list.
-\end{enumerate}
-\textbf{In real world data rarely makes case 2 happen}! That is, the set of top few closest centroids for a data point \textbf{remains almost unchange}.
+	Consider a data point p1 and cluster centroids represented as $c_1$, $c_2$..., $c_k$. We assume that $k^{\prime} << k $ and there is a candidate cluster list for $p_1$.\par
+	\pause
+	If we run K-means for second iteration, $p_1$ will compute distance to all k centroids. After second iteration, there are two possible cases:
+	\begin{enumerate}
+		\item The list do not change but only members'ranking changes.
+		\item Several members of the centroids in the previous list are replaced with other centroids which were not in the list.
+	\end{enumerate}
+	\textbf{In real world data rarely makes case 2 happen}! That is, the set of top few closest centroids for a data point \textbf{remains almost unchange}.
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Augmentation analysis}
-Overhead analysis:
-\begin{itemize}
-\item \textbf{Computation overhead:} $O(nklog(k))$ for creating CCL at first. We have to compute the distance to each cluster's centroid for each point and sort them to create CCL. 
-\item \textbf{Memory overhead:}$ O(nk^{\prime})$ to maintain CCL.
-\end{itemize}
+	Overhead analysis:
+	\begin{itemize}
+		\item \textbf{Computation overhead:} $O(nklog(k))$ for creating CCL at first. We have to compute the distance to each cluster's centroid for each point and sort them to create CCL.
+		\item \textbf{Memory overhead:}$ O(nk^{\prime})$ to maintain CCL.
+	\end{itemize}
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Choose a proper K}
-\ccp{Use a range of set}: We choose a set of K and compare their performance. In this set, we need to choose k \ccp{significantly smaller than the number of objects in the data sets and let it be resonably large based on this}.\par
+	\ccp{Use a range of set}: We choose a set of K and compare their performance. In this set, we need to choose k \ccp{significantly smaller than the number of objects in the data sets and let it be resonably large based on this}.\par
 
 
 \end{frame}
@@ -396,33 +396,36 @@ Overhead analysis:
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Choose a proper K}
-\ccp{statistical measures}: There are several statistical measures available for selecting K. \ccp{They are calculated with certain assumptions about the underlying distribution of the data.} \par
-e.g. The Bayesian information criterion is calculated on data sets which are constructed by a set of \textbf{Gaussian distributions}. \par
+	\ccp{statistical measures}: There are several statistical measures available for selecting K. \ccp{They are calculated with certain assumptions about the underlying distribution of the data.} \par
+	e.g. The Bayesian information criterion is calculated on data sets which are constructed by a set of \textbf{Gaussian distributions}. \par
 \end{frame}
 
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Choose a proper K}
-\ccp{visualization}: Visual verification is applied widely because of its simplicity and explanation possibilities. In my own practice, I usually use PCA or other methods to draw points on a planar graph to check how many clusters exist in Machine Learning course's project. But it has many restrictions. e.g. The application of
-visualization techniques implies a data distribution continuity in the expected clusters. In fact, Visual examples are often used to illustrate the drawbacks of an algorithm. \par
+	\ccp{Visualization}: Visual verification is applied widely because of its simplicity and explanation possibilities.
 
 \end{frame}
 
 \section{Key properties}
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
-	\frametitle{Discussion}
-
+	\frametitle{K-means problem is NP Complete}
+We can prove this using 3-SAT and Exact Cover by 3-Sets respectively. Existing local search algorithms that computes a certain local (and not necessarily global) optimum for this problem are what we really feel interested in.\par
 \end{frame}
-
-%%//////////////////////////////////////////////////////////////////////////////////////////////%%
-\begin{frame}
-	\frametitle{Discussion}
-
-\end{frame}
-
 
 \section{Application}
+%%//////////////////////////////////////////////////////////////////////////////////////////////%%
+\begin{frame}
+	\frametitle{COVID-19 Dataset}
+A team uses Principal Component Analysis (PCA)  while determining the centroids. With this method to decide on centroids, their method uses much less iterations times and execution time for convergence. Compared with existing K-means++, their algorithm's performance is constant and faster. \par
+Their flowchart of centroids deciding:
+\centerline{\includegraphics[width=0.65\textwidth]{figures/COVID19.png}}
+
+\end{frame}
+
+
+
 %%//////////////////////////////////////////////////////////////////////////////////////////////%%
 \begin{frame}
 	\frametitle{Discussion}
