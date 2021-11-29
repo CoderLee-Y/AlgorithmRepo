@@ -1,84 +1,46 @@
-% !TEX bibfile = ref.bib
-\documentclass[11pt]{article}
-\usepackage{latexsym}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{epsfig}
-\usepackage[right=0.8in, top=1in, bottom=1.2in, left=0.8in]{geometry}
-\usepackage{setspace}\usepackage{graphicx} %插入图片的宏包
-\usepackage{float} %设置图片浮动位置的宏包
-\usepackage{subfigure} %插入多图时用子图显示的宏包
-\usepackage{algorithm}
-\usepackage{algorithmic}
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}  % Use Input in the format of Algorithm
-\renewcommand{\algorithmicensure}{\textbf{Output:}} % Use Output in the format of Algorithm
-\usepackage{listings}
-\usepackage{ctex}
+\documentclass[9pt]{beamer}
 
-% 用来设置附录中代码的样式
+%\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{algorithm2e}
+\usepackage{color, colortbl}
+\usepackage{enumerate}
+\usepackage{arydshln}
+\usepackage{multirow}
 
-\lstset{
-    basicstyle          =   \sffamily,          % 基本代码风格
-    keywordstyle        =   \bfseries,          % 关键字风格
-    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
-    stringstyle         =   \ttfamily,  % 字符串风格
-    flexiblecolumns,                % 别问为什么，加上这个
-    numbers             =   left,   % 行号的位置在左边
-    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
-    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
-    showstringspaces    =   false,
-    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
-    frame               =   lrtb,   % 显示边框
-}
+\renewcommand{\figurename}{Fig}
+\usetheme{uha}
 
-\lstdefinestyle{Python}{
-    language        =   Python, % 语言选Python
-    basicstyle      =   \zihao{-5}\ttfamily,
-    numberstyle     =   \zihao{-5}\ttfamily,
-    keywordstyle    =   \color{blue},
-    keywordstyle    =   [2] \color{teal},
-    stringstyle     =   \color{magenta},
-    commentstyle    =   \color{red}\ttfamily,
-    breaklines      =   true,   % 自动换行，建议不要写太长的行
-    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
-    basewidth       =   0.5em,
-}
+%\theoremstyle{plain}
+%  \newtheorem{theorem}{Theorem}
+%  \newtheorem{lemma}{Lemma}
+\newtheorem{corrolary}{Corollary}
+\newtheorem{claim}{Claim}
+\newtheorem{proposition}{Proposition}
+\newtheorem{property}{Property}
+%  \newtheorem{fact}{Fact}
+%\theoremstyle{definition}
+%  \newtheorem{definition}{Definition}
+%  \newtheorem{example}{Example}
+%\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{proviso}{Proviso}
 
-\spacing{1.06}
-
-\newcommand{\handout}[5]{
-  \noindent
-  \begin{center}
-  \framebox{
-    \vbox{\vspace{0.25cm}
-      \hbox to 5.78in { {SE3352:\hspace{0.12cm}Algorithm Design} \hfill #2 }
-      \vspace{0.48cm}
-      \hbox to 5.78in { {\Large \hfill #5  \hfill} }
-      \vspace{0.42cm}
-      \hbox to 5.78in { {#3 \hfill #4} }\vspace{0.25cm}
-    }
-  }
-  \end{center}
-  \vspace*{4mm}
-}
-\newcommand{\lecture}[4]{\handout{#1}{#2}{#3}{Scribes:\hspace{0.08cm}#4}{Notes #1}}
-
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{observation}[theorem]{Observation}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{claim}[theorem]{Claim}
-\newtheorem{fact}[theorem]{Fact}
-\newtheorem{assumption}[theorem]{Assumption}
-\newcommand{\E}{\textbf{E}}
-\newcommand{\var}{\text{var}}
-\def\eps{\ensuremath\epsilon}
+\newcommand{\ccr}[1]{{\color{red}#1}}
+\newcommand{\ccb}[1]{{\color{blue}#1}}
+\newcommand{\ccp}[1]{{\color{purple}#1}}
+\newcommand{\ccm}[1]{{\color{magenta}#1}}
+\newcommand{\cco}[1]{{\color{orange}#1}}
+\newcommand{\ccy}[1]{{\color{yellow}#1}}
+\newcommand{\ccl}[1]{{\color{lime}#1}}
+\newcommand{\ccc}[1]{{\color{cyan}#1}}
+\newcommand{\ccg}[1]{{\color{gray}#1}}
+\newcommand{\ccpk}[1]{{\color{pink}#1}}
+\newcommand{\ccov}[1]{{\color{olive}#1}}
 
 \begin{document}
-
-\lecture{1 -- Clustering}{Nov 27, 2021}{Instructor:\hspace{0.08cm}\emph{Guoqiang Li}}{\emph{Haotian Wang, Yiyan Li}}
-
 
 \section{Introduction}
 Clustering can be considered the most important unsupervised learning problem; As every other problem of this kind, it deals with finding a structure in a collection of unlabeled data.
@@ -87,7 +49,6 @@ A cluster is a collection of objects which are “similar” between them and ar
 \end{definition}
 Note that this is a very rough definition. Part of common application domains in which the clustering problem arises are as follows:
 \begin{itemize}
-
 \item \textbf{Multimedia Data Analysis:} Learning image or video representations without manual annotations. e.g. When using Streaming media platform, face clustering can recognize all the actors in any frame. \cite{wang2019linkage,xing2021learning}
 \item \textbf{Responding to public health crises:} With the increasing number of samples, the manual clustering of COVID-19 data samples becomes time-consuming. Clustering helps classify medical datasets deterministically.\cite{COVID-19}
 \item \textbf{Social Network Analysis:} Clustering provides an important understanding of the community structure in the network. Results can be used for customer segmentation and sending ads. Put it in a formal way, \textbf{clustering groups the nodes of the graph into clusters}, taking into account the edge structure of the graph in such a way that there are several edges within each cluster and very few between clusters. \cite{community}
@@ -134,68 +95,12 @@ It iteratively calculates the sum of distance within a cluster and updates the p
   \item For each $i \in \{1, 2 \dots k\}$, set $c_i$ to be the center of all points in $C_i$ 
   \item Repeat Step 2 and Step 3 until $\mathcal{C}$ no longer changes.
 \end{enumerate}
-\begin{algorithm}
-  \caption{K-means}
-  \label{k-means}
-  \begin{algorithmic}
-    \REQUIRE {k: number of output cluster; Data: input data}
-    \ENSURE {$\mathcal{S}$ : set of all clusters $S_i$}
-    \STATE Arbitrarily initialize k centroids $C=\{c_1, c_2 \dots c_k\}$ 
-    \REPEAT
-      \FOR {each point $x$ in Data $S$}
-      \FOR {$i = 0 \rightarrow k$}
-      \FOR {$j = 0 \rightarrow k$}
-      \STATE {set x to be a member of cluster $S_i$ where ${\left\lVert x-c_i\right\rVert }^2 < {\left\lVert x-c_j\right\rVert }^2$}
-      \ENDFOR
-      \ENDFOR
-      \ENDFOR
-      \FOR {$i = 0 \rightarrow k$}
-      \STATE {$c_i \leftarrow \frac{1}{\left\lvert S_i\right\rvert } \sum_{x \in S_i} x$}
-      \STATE {set $c_i$ to be the centroid of all points in  cluster $S_i$}
-      \ENDFOR
-    \UNTIL{$S$ stays unchanaged}
-    \ENSURE {$\mathcal{S}$ : set of all clusters $S_i$}
-  \end{algorithmic}
-\end{algorithm}
 
-\begin{proof}
-  Let $x_1, x_2 \dots x_n$ be n vectors in $\mathbb{R}^{d}$, then $f(x) = \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2 $ gets its minimum iff. $x = \frac{1}{n} \sum_{i=1}^{n}x_i$
-  \begin{equation*}
-    \begin{split}
-      \frac{d f(x)}{d x} &=  \frac{d \sum_{i=1}^{n} {\left\lVert x_i - x\right\rVert}^2}{d x} \\
-      & = -2\sum_{i=1}^{n} (x_i - x) \\
-      & = 0 \\
-      x & = \frac{1}{n} \sum_{i=1}^{n}x_i
-    \end{split}
-  \end{equation*}
-  
-  \par $x = \frac{1}{n} \sum_{i=1}^{n}x_i$ is a stationary point of this function. Owing that it is a strictly convex function, the stationary point is alse the only minimun point of that function. 
-  So the function gets its minimum at $x = \frac{1}{n} \sum_{i=1}^{n}x_i$.
-  \end{proof}
+
   \begin{proof}
     Updated value $f(x'')$ is strictly less than the original $f(x')$ where  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$.
   \par As described above, each centroid is updated to the center of all points in cluster $C_i$. 
   That is to say, once the centroid of one cluster changed from $x'$ to  $x'' = \frac{1}{n} \sum_{i=1}^{n}x_i$, the function gets its minimum in this iteration at $x''$ and $f(x'')<f(x')$.
-  \end{proof}
-  \begin{proof}
-  Naive K-means algorithm's time complexity is $O(k*n*i)$
-  \par In each iteration there are such steps:
-  \begin{itemize}
-    \item Distance calculation: To calculate the distance from a point to the centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
-    \item Comparisons betweeen distances.
-    \item Centroid calculation.
-  \end{itemize}
-  \par So the total number of operations in one iteration is:
-  \begin{equation*}
-    \begin{split}
-      C &=  distance\ calculation + comparisons + centroids\ calculation\\
-      & = k * n * O(1) + (k-1) * n * O(1) + k * n * O(1) \\
-      & = O(kn)
-    \end{split}
-  \end{equation*}
-  \par where k denotes the number of clusters, n denotes the count of data vectors and d denotes vector dimension.
-  \par And the whole process takes $i$ iterations in total so the time complexity of K-means algorithm is $O(kni)$.
-
   \end{proof}
   \subsubsection{DrawBack}
   The naive K-means algorithm do great work for the simplicity and efficiency, but it also has drawbacks. In the caes of initializing $k$ centroids using naive K-means algorithm (usually Lloyd's algorithm), we use randomization.
@@ -234,10 +139,10 @@ The K-means++ algorithm was proposed by David Arthur and Sergei Vassilvitskii in
 And the updated algorithm does exactly the same in the iteration steps. The algorithm goes as follows:
 \begin{enumerate}
   \item Pick the first centroid $c_1$ randomly from the dataset $S$
-  \item Compute the distance of all points in the dataset from nearest, previously chosen centroid $c_i$. The distance of a point $x$ could be calculated by $$ Dist(x) =\min_{c_i \in C} {\left\lVert x-c_i\right\rVert } $$
+  \item Compute the distance of all points in the dataset from centroid $c_1$. The distance of a point $x$ could be calculated by $$ Dist(x, c_i) = {\left\lVert x-c_i\right\rVert } $$
   \item Take a new centroid $c_i$, choosing $x_j \in $ from all points with probability $p_j$ $$p_j = \frac{Dist^2(x_j)}{\sum_{x_j \in S} Dist^2(x_j)} $$
   \item Repeat the above steps until $k$ cetnroids are found
-  \item Iteration steps are exactly the same as naive K-means algorithm
+  \item Iteration steps are exactly the same as navie K-means algorithm
 \end{enumerate}
 \par k-means++ consistently outperformed k-means, both by achieving a lower potential value,
 in some cases by several orders of magnitude, and also by completing faster. With the synthetic
@@ -245,33 +150,41 @@ examples, the k-means method does not perform well, because the random seeding w
 merge clusters together, and the algorithm will never be able to split them apart. The careful
 seeding method of k-means++ avoids this problem altogether, and it almost always attains the
 optimal results on the synthetic datasets.\cite{kmeanspp}
-\begin{proof}
-  K-means++ algorithm's initialization time complexity is $O(k*n*d)$
-  \par In each iteration there are such steps:
-  \begin{itemize}
-    \item Distance calculation: To calculate the distance from a point to a newly selected centroid, we can use the squared Euclidean proximity function, which is thought to be $O(1)$
-    \item Comparisons betweeen distances.
-    \item Centroid calculation.
-  \end{itemize}
-  \par So the total number of operations in $i^{th}$ iteration is:
-  \begin{equation*}
-    \begin{split}
-      C_i &=  distance\ calculation + comparisons + centroids\ selection\\
-      & = n * O(1) + * n * O(1) + O(1) \\
-      & = O(n)
-    \end{split}
-  \end{equation*}
-  \par where k denotes the number of clusters, n denotes the count of data vectors.
-  \par And the whole process takes $k$ iterations in total so the time complexity of K-means++'s initialization is $O(kn)$.
-\end{proof}
+
+% opt 2
+\subsection{Reduce cost of single iteration}
+In both K-means and K-means$++$ algorithm, if there are $n$ data points in $\mathbb{R}^ d$ space and $k$ clusters for partition, each iteration involves $n * k$ distance computations, which would significantly slow down algorithm. One contribution from Siddhesh Khandelwal\cite{Faster} helps reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. We'll show how this heuristic works in detail.
+\subsubsection{Inspiration}
+The optimization is based on the observation that across all iterations of K-means or K-means$++$, a data point changes its membership only among a small subset of clusters. The heuristic considers only a subset of \textbf{nearby cluster as candidates} for deciding membership for a data point. This heuristic has advantage of speeding up K-means and K-means$++$ clustering with marginal increase in loss functuion(MSE in our case). Note that the optimization can be applied in any algorithm to solve K-means problem with steps to caculate distance between points and centers, acting as augmentation.
+\subsubsection{Augmentation target}
+Let $A$ be any variant algorithm of K-means problem and $B$ be the same variant augmented with this geuristic. Let $T$ be the time required for $A$ to converge to MSE value of $E$. Let $T^{\prime}$ be the time required for $B$ to converge to MSE value of $E^{\prime}$. Our target is:
+\begin{itemize}
+\item \textbf{For convergence time:} $T^{\prime} < T$
+\item \textbf{For loss:} $E^{\prime} \le E \space $ or $ \space E^{\prime} \overset{marginally}{>} E$
+\end{itemize}
+
+\subsubsection{Augmentation detail}
+\par We assume that $k^{\prime}$ is significantly smaller than $k$. We will show how to choose $k^{\prime}$ later.We build candidate cluster list (CCL) based on top $k^{\prime}$ nearest clusters to the data point after first iteration of K-means. \par
+
+Consider a data point p1 and cluster centroids represented as $c_1$, $c_2$..., $c_k$. We assume that $k^{\prime}$ = 4, and $k^{\prime} << k $. After first iteration of K-means $c_5$, $c_6$, $c_8$, and $c_{11}$ are the top four closest centroids to $p_1$ in the increasing order of distance. This is the candidate cluster list for $p_1$. If we run K-means for second iteration, $p_1$ will compute distance to all k centroids. After second iteration, there are two possible cases:
+\begin{enumerate}
+\item The list do not change but only members'ranking changes.
+\item Several members of the centroids in the previous list are replaced with other centroids which were not in the list.
+\end{enumerate}
+It seems that the augmentation makes no sense. But what makes this method succeed is \textbf{real world data rarely makes case 2 happen}. That is, the set of top few closest centroids for a data point \textbf{remains almost unchanged even though order among them might change}.
+\subsubsection{Augmentation analysis}
+Overhead analysis:
+\begin{itemize}
+\item \textbf{Computation overhead:} $O(nklog(k))$ for creating CCL at first. We have to compute the distance to each cluster's centroid for each point and sort them to create CCL. 
+\item \textbf{Memory overhead:}$ O(nk^{\prime})$ to maintain CCL.
+\end{itemize}
+\par
 
 % opt 3
 \subsection{Avoid redundant computation}
-In both K-means and K-means$++$ algorithm, if there are $n$ data points in $\mathbb{R}^ d$ space and $k$ clusters for partition, each iteration involves $n * k$ distance computations, which would significantly slow down algorithm. Based on the observation of  unnecessary calculation in the process of iteration, Charles Elkan put forward a strict method to avoid unnecessary computation.\cite{articleToBound} The key idea is to bound on data point to cluster centroid distance and use triangle inequality to avoid redundant computations of distance between data points and cluster centroids.
-
+In fact, the previous augmentation \cite{Faster} makes trade-off between loss function and running time. Still based on the observation of  unnecessary calculation in the process of iteration, Charles Elkan put forward a more strict method to avoid unnecessary computation.\cite{articleToBound} The key idea is to bound on data point to cluster centroid distance and use triangle inequality to avoid redundant computations of distance between data points and cluster centroids.
 \subsubsection{Inspiration}
-The accelerated algorithm applyies the triangle inequality in two different ways, keeping track of lower and upper bounds for distances between points and cluster centroids. Its inspiration is based on the fact that most distance calculations in standard K-means are redundant. \par
-If a point is \textbf{far away from a centroid}, it is not necessary to calculate the exact distance between the point and the centroid in order to know that the point should not be assigned to this centroid. Conversely, \textbf{if a point is much closer to one center than to any other}, calculating exact distances is not necessary to know that the point should be assigned to the first center. 
+The accelerated algorithm applyies the triangle inequality in two different ways, and keeps track of lower and upper bounds for distances between points and cluster centroids. Its inspiration is based on the fact that most distance calculations in standard K-means are redundant. If a point is \textbf{far away from a centroid}, it is not necessary to calculate the exact distance between the point and the centroid in order to know that the point should not be assigned to this centroid. Conversely, \textbf{if a point is much closer to one center than to any other}, calculating exact distances is not necessary to know that the point should be assigned to the first center. 
 \subsubsection{Augmentation target}
 There are 3 properties the accelerated K-means algorithm should satisfy:
 \begin{itemize}
@@ -279,12 +192,11 @@ There are 3 properties the accelerated K-means algorithm should satisfy:
 \item \textbf{Correct results, } it always produces exactly the same final centers as the standard  algorithm.
 \item \textbf{Support any black-box distance metric,} so it should not rely for example on optimizations specific to Euclidean distance.
 \end{itemize} \par
-This strong properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers(e.g. ISODATA, which not memtioned in our note) can be used together with the new algorithm.
+Obviously, It's more strict than previous method. This stronger properties mean that more basic K-means algorithms are able to install this augmentation. e.g., heuristics for merging or splitting centers can be used together with the new algorithm.(e.g. ISODATA, which not memtioned in our note)
 
 \subsubsection{Preliminary results}
-The algorithm firstly find the only black box property of any distance metrics. That is: for any 3 points $x, y, z$, satisfy  triangle inequality:
-$$d(x,z) \le d(x, y) + d(y, z)$$ in which $d()$ means distance function.\par
-Let x be a point and let b and c be centers, we need to know that $d(x, c) \ge d(x, b)$ in order to avoid calculating $d(x, c)$. Now I'd like to introduce 2 Lemmas.
+The algorithm firstly find the only black box property of any distance metrics.That is: for any 3 points $x, y, z$, satisfy  triangle inequality:
+$$d(x,z) \le d(x, y) + d(y, z)$$ in which $d()$ means distance function. Let x be a point and let b and c be centers, we need to know that $d(x, c) \ge d(x, b)$ in order to avoid calculating $d(x, c)$. Now I'd like to introduce 2 Lemma.
 \begin{lemma}
 Let x be a point and let b and c be centers. If $d(b, c) \ge 2d(x,b)$ then $d(x,c) \ge d(x,b)$.
 \end{lemma}
@@ -343,35 +255,6 @@ The most significant part is step (3), we use many strictions to avoid redundant
 \subsubsection{Augmentation analysis}
 Compared to original algorithm, in 6 typical benchmark, using this optimazation speeds up algorithms from $ 11.3 \times$ to $  351 \times$.
 
-% opt 2
-\subsection{Relax the restriction}
-In fact, the previous augmentation makes no trade-off between loss function and running time. The algorithm is designed under strict limitation. Still based on the same observation, the team of Siddhesh Khandelwal\cite{Faster} make contributions to help reduce this cost to $n * k^{\prime}$ ($k^{\prime} << k$) by generating candidate cluster list (CCL) of size $k^{\prime}$ for each data point. We'll show how this heuristic works in detail.
-\subsubsection{Inspiration}
-The optimization is based on the observation that across all iterations of K-means or K-means$++$, a data point changes its membership only among a small subset of clusters. The heuristic considers only a subset of \textbf{nearby cluster as candidates} for deciding membership for a data point. This heuristic has advantage of speeding up K-means and K-means$++$ clustering with marginal increase in loss functuion(MSE in our case). Note that the optimization can be applied in any algorithm to solve K-means problem with steps to caculate distance between points and centers, acting as augmentation.
-\subsubsection{Augmentation target}
-Let $A$ be any variant algorithm of K-means problem and $B$ be the same variant augmented with this geuristic. Let $T$ be the time required for $A$ to converge to MSE value of $E$. Let $T^{\prime}$ be the time required for $B$ to converge to MSE value of $E^{\prime}$. Our target is:
-\begin{itemize}
-\item \textbf{For convergence time:} $T^{\prime} < T$
-\item \textbf{For loss:} $E^{\prime} \le E \space $ or $ \space E^{\prime} \overset{marginally}{>} E$
-\end{itemize}
-
-\subsubsection{Augmentation detail}
-\par We assume that $k^{\prime}$ is significantly smaller than $k$. We will show how to choose $k^{\prime}$ later.We build candidate cluster list (CCL) based on top $k^{\prime}$ nearest clusters to the data point after first iteration of K-means. \par
-
-Consider a data point p1 and cluster centroids represented as $c_1$, $c_2$..., $c_k$. We assume that $k^{\prime}$ = 4, and $k^{\prime} << k $. After first iteration of K-means $c_5$, $c_6$, $c_8$, and $c_{11}$ are the top four closest centroids to $p_1$ in the increasing order of distance. This is the candidate cluster list for $p_1$. If we run K-means for second iteration, $p_1$ will compute distance to all k centroids. After second iteration, there are two possible cases:
-\begin{enumerate}
-\item The list do not change but only members'ranking changes.
-\item Several members of the centroids in the previous list are replaced with other centroids which were not in the list.
-\end{enumerate}
-It seems that the augmentation makes no sense. But what makes this method succeed is \textbf{real world data rarely makes case 2 happen}. That is, the set of top few closest centroids for a data point \textbf{remains almost unchanged even though order among them might change}.
-\subsubsection{Augmentation analysis}
-Overhead analysis:
-\begin{itemize}
-\item \textbf{Computation overhead:} $O(nklog(k))$ for creating CCL at first. We have to compute the distance to each cluster's centroid for each point and sort them to create CCL. 
-\item \textbf{Memory overhead:}$ O(nk^{\prime})$ to maintain CCL.
-\end{itemize}
-\par
-
 % Opt 4
 \subsection{Choose a proper K}
 How to evaluate goodness of clustering for various potential values of number of clusters? We will introduce several common methods.\cite{datamining,inproceedings,articleToBound,doi:10.1243/095440605X8298} Let's review our optimization. We speed up the algorithm with either lenient or strict conditions and seed the initial K center properly. But still exists the only hyper-parameter we don't know how to tune. So let's begin. \par
@@ -392,10 +275,9 @@ visualization techniques implies a data distribution continuity in the expected 
 When K-means clustering is used as a pre-processing tool, the number of clusters is determined by the specific requirements of the main processing algorithm. No attention is paid to the effect of the clustering results on the performance of this algorithm. In such applications, the K-means algorithm is employed just as a black box without validation of the clustering result. \par
 
 \section{Key properties}
-\subsection{K-means problem is NP Complete}
 K-means problem is an NP Hard problem, and two teams have proved them using 3-SAT and Exact Cover by 3-Sets respectively.\cite{npc-prove,Vattani_thehardness}  For lack of space, we won't describe their proof in detail. For reduction from planar 3-SAT to k-means, the author corresponds a simple circuit to each variable $x_i$ in 3-SAT. And each circuit has an even number of vertices marked on it. Circuits are partitioned into pairs of adjacent vertices according to the value of $x_i$. Then, each edge becomes a representation of value. The authors set the distance between vertices and uniquely determine a layout that gives a correct reduction from planar 3-SAT to planar k-means. Then we can use K-means to solve 3-SAT. That is, K-means problem is NP-Complete problem.
-\subsection{Algorithm complexity analysis}
-Please check our section 3 and every algorithm's complexity is analyzed soon after we give out its details.
+
+\section{Conclusion}
 
 \section{Application}
 In real world, K-means are widely used in clustering for its simplicity and effcient. Its core concept is extremely easy to understand and the updated version algorithm itself only cost a few iterations to output pretty good results. And here are a few applications of K-means algorithm in real life.
@@ -413,20 +295,16 @@ The document vectors are then treated as input of K-means algorithm to help iden
 
 \subsection{Research based on COVID-19 Dataset}
 Now we'll present a k-means clustering-based COVID-19 analysis to determine the clusters according to the health care quality of the countries. In fact we don't think this research meaningful, but just refer to their way to use K-Means in application.\cite{zubair2020efficient} \par
-The team uses Principal Component Analysis (PCA)  while determining the centroids.
+The team uses we use Principal Component Analysis (PCA)  whiledetermining the centroids.
 \begin{figure}[H] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
   \centering %图片居中
   \includegraphics[width=0.5\textwidth]{COVID19.png} %插入图片，[]中设置图片大小，{}中是图片文件名
   \caption{Flowchart of centroids deciding} %最终文档中希望显示的图片标题
   \label{Fig.centroids} %用于文内引用的标签
 \end{figure}
-With this method to decide on centroids, the author argues that their method uses much less iterations times and execution time for convergence. Compared with existing K-means++, their algorithm's performance is constant and faster. \par
-But to be honest, we have to argue that their research just used K-means to generate clusters at last. In fact, with PCA, we can clearly observer that countries can be divided into 4 categories on the issue of COVID-19 situations.(which fits our impression) What K-means does just verifies countries in detail. That is, without enough knowledge of dataset, we have to decide on cluster number using other methods. After that, K-means will generate clusters for us finally. That's what section 3.6.4 implies.
+With this method to decide on centroids, the author argues that their method uses much less iterations and execution time for convergence. Compared with existing K-means++, their algorithm's performance is constant and faster. \par
+But to be honest, we have to argue that their research just used K-means to generate clusters at last. In fact, after PCA, we can clearly observer that there are 3 kinds of COVID-19 situations over the world.(which fits our impression) What K-means does just verifies countries in detail. That is, without enough knowledge of dataset, we have to decide on cluster number with other methods. After that, K-means will generate clusters for us finally. That's what this article implies.
 
-\section{Conclusion}
-Bringing in the K-means algorithm from the beginning, we give the initailization strategy and iteration steps of naive K-keans algorithm.
-Given the proof that the object function decrements in iteration, the objective always converges at a certain point in time. But the drawbacks are annoying and fatal, which may lead to far different results than expected and increase of iterations, so we have some optimization of them, bring us K-means++ and some other way to select initial centroids, avoid redundant computation, select proper magic number $k$ etc.
-K-means are wildly used in many aspects of life, making it easier to do customer-partitioning, clsasifying documents, optimizing resource allocation, pattern recognizing in images and so many other application in industry and daily life.
 
 \section{Median Trick}
 So far, we have an algorithm $A$ which estimates in correct range of $\eps$ with probability $\ge 0.9$. Our new algorithm $A^{\ast}$ will output in range of $\eps$ with probability $1-\delta$.
